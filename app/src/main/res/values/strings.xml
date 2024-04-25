@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">HomeLibrary</string>
+    <string name="app_name">Домашняя библиотека</string>
+    <string name="loading">Загрузка...</string>
 </resources>
