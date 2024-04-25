@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Домашняя библиотека</string>
     <string name="loading">Загрузка...</string>
+    <string name="loading_db_fail">Ошибка при подключении к БД</string>
+    <string name="login_text">Авторизация</string>
+    <string name="login_guest_account">📇 Гостевой аккаунт</string>
+    <string name="login_login">Логин</string>
+    <string name="login_password">Пароль</string>
+    <string name="login_authorize">Войти</string>
+    <string name="login_signup">Нет учётной записи? Зарегистрируйтесь!</string>
 </resources>
