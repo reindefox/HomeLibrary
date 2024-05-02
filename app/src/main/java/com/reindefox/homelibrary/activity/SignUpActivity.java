@@ -1,5 +1,6 @@
 package com.reindefox.homelibrary.activity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,6 +25,10 @@ public class SignUpActivity extends AppCompatActivity {
      * Разрешить регистрацию без принятия соглашения
      */
     private static boolean ENABLE_WITHOUT_EULA = false;
+
+    private SharedPreferences sharedPreferences;
+
+    private SharedPreferences.Editor editor;
 
     /**
      * Базовая инициализация компонента
@@ -58,6 +63,7 @@ public class SignUpActivity extends AppCompatActivity {
                 String password = binding.password.getText().toString();
                 String repeatPassword = binding.repeatPassword.getText().toString();
 
+                // TODO Красное поле и текст если пароли не сопадают
                 if (!password.equals(repeatPassword)) {
 //                    binding.repeatPassword
                 }

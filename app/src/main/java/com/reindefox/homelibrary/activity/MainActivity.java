@@ -41,9 +41,8 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO Статус бар всегда видно должно быть
         // TODO подключение к БД и потом редирект на страницу авторизации
-        // TODO ScreenOrientation
         // TODO Сделать суперпользователя
-        if (!createDatabaseConnection()) {
+        if (!createWebServerConnection()) {
             Glide.with(view)
                     .load(R.drawable.baseline_error_outline_24)
                     .into(binding.foxLoading);
@@ -57,11 +56,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Установка подключения к БД
+     * Установка подключения к веб-серверу
      *
      * @return Состояние подключения
      */
-    private boolean createDatabaseConnection() {
+    private boolean createWebServerConnection() {
         return true;
     }
 

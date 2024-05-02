@@ -1,6 +1,8 @@
 package com.reindefox.homelibrary.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,20 +13,13 @@ import android.text.TextPaint;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.datastore.preferences.core.MutablePreferences;
-import androidx.datastore.preferences.core.Preferences;
-import androidx.datastore.preferences.core.PreferencesKeys;
-import androidx.datastore.preferences.rxjava3.RxPreferenceDataStoreBuilder;
-import androidx.datastore.rxjava3.RxDataStore;
 
+import com.reindefox.homelibrary.AuthorizationCredentialsProvider;
 import com.reindefox.homelibrary.databinding.ActivityAuthorizationBinding;
-
-import io.reactivex.rxjava3.core.Single;
 
 /**
  * Класс активности авторизации пользователя
@@ -36,16 +31,11 @@ public class AuthorizationActivity extends AppCompatActivity {
      */
     private ActivityAuthorizationBinding binding;
 
-    /**
-     * Максимальная длина имени пользователя и пароля
-     */
-    public static final int MAX_USER_DATA_LENGTH = 32;
+    private SharedPreferences sharedPreferences;
 
-    RxDataStore<Preferences> dataStore;
+    private SharedPreferences.Editor editor;
 
-    private static final Preferences.Key<String> LOGIN = PreferencesKeys.stringKey("login");
-
-    private static final Preferences.Key<String> PASSWORD = PreferencesKeys.stringKey("password");
+    private static final String LOGIN = "login";
 
     /**
      * Базовая инициализация компонента
@@ -61,21 +51,12 @@ public class AuthorizationActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        dataStore = new RxPreferenceDataStoreBuilder(this, "user")
-                .build();
+        sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
+        editor = getSharedPreferences("user", MODE_PRIVATE)
+                .edit();
 
         setupFieldLimitations();
         setupSignUpText();
-
-        dataStore.updateDataAsync(preferences -> {
-            MutablePreferences mutablePreferences = preferences.toMutablePreferences();
-
-            mutablePreferences.set(LOGIN, "1");
-
-            Log.i("1", "bruh");
-
-            return Single.just(mutablePreferences);
-        });
 
         binding.login.addTextChangedListener(new TextWatcher() {
             @Override
@@ -84,13 +65,8 @@ public class AuthorizationActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                dataStore.updateDataAsync(prefsIn -> {
-                    MutablePreferences mutablePreferences = prefsIn.toMutablePreferences();
-
-                    mutablePreferences.set(LOGIN, s.toString());
-
-                    return Single.just(mutablePreferences);
-                });
+                editor.putString(LOGIN, s.toString());
+                editor.apply();
             }
 
             @Override
@@ -104,11 +80,11 @@ public class AuthorizationActivity extends AppCompatActivity {
      */
     private void setupFieldLimitations() {
         binding.login.setFilters(new InputFilter[] {
-                new InputFilter.LengthFilter(MAX_USER_DATA_LENGTH)
+                new InputFilter.LengthFilter(AuthorizationCredentialsProvider.MAX_USER_DATA_LENGTH)
         });
 
         binding.password.setFilters(new InputFilter[] {
-                new InputFilter.LengthFilter(MAX_USER_DATA_LENGTH)
+                new InputFilter.LengthFilter(AuthorizationCredentialsProvider.MAX_USER_DATA_LENGTH)
         });
     }
 
@@ -116,8 +92,7 @@ public class AuthorizationActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        String login = dataStore.data().firstOrError().map(prefs -> prefs.get(LOGIN)).onErrorReturnItem("null").blockingGet();
-        // TODO хранилище данных
+        binding.login.setText(sharedPreferences.getString(LOGIN, null));
     }
 
     /**
@@ -153,6 +128,6 @@ public class AuthorizationActivity extends AppCompatActivity {
         startActivity(intent);
 
         // TODO проверить
-        finish();
+//        finish();
     }
 }
