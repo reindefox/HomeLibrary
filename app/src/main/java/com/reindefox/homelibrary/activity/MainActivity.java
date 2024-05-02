@@ -1,6 +1,5 @@
 package com.reindefox.homelibrary.activity;
 
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -19,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Биндинг элемента
      */
-    public ActivityMainBinding binding;
+    private ActivityMainBinding binding;
 
     /**
      * Базовая инициализация компонента
@@ -42,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO Статус бар всегда видно должно быть
         // TODO подключение к БД и потом редирект на страницу авторизации
+        // TODO ScreenOrientation
+        // TODO Сделать суперпользователя
         if (!createDatabaseConnection()) {
             Glide.with(view)
                     .load(R.drawable.baseline_error_outline_24)
@@ -70,8 +71,9 @@ public class MainActivity extends AppCompatActivity {
     private void initializeAuthorizationActivity() {
         Intent intent = new Intent(this, AuthorizationActivity.class);
 
-        ActivityOptions options = ActivityOptions
-                .makeSceneTransitionAnimation(this, findViewById(R.id.bookImage), "robot");
+        // TODO
+//        ActivityOptions options = ActivityOptions
+//                .makeSceneTransitionAnimation(this, findViewById(R.id.bookImage), "robot");
 
         startActivity(intent);
 

@@ -8,4 +8,7 @@
     <string name="login_password">Пароль</string>
     <string name="login_authorize">Войти</string>
     <string name="login_signup">Нет учётной записи? Зарегистрируйтесь!</string>
+    <string name="login_password_repeat">Повторите пароль</string>
+    <string name="login_signup_register">Зарегистрироваться</string>
+    <string name="login_signup_eula">Согласен с условиями соглашения</string>
 </resources>
