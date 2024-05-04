@@ -73,6 +73,13 @@ public class AuthorizationActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
             }
         });
+
+        binding.signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginUser();
+            }
+        });
     }
 
     /**
@@ -129,5 +136,11 @@ public class AuthorizationActivity extends AppCompatActivity {
 
         // TODO проверить
 //        finish();
+    }
+
+    private boolean loginUser() {
+
+
+        return false;
     }
 }
