@@ -3,7 +3,7 @@
     <string name="loading">Загрузка...</string>
     <string name="loading_db_fail">Ошибка при подключении к БД</string>
     <string name="login_text">Авторизация</string>
-    <string name="login_guest_account">📇 Гостевой аккаунт</string>
+    <string name="login_test_account">📇 Тестовый аккаунт</string>
     <string name="login_login">Логин</string>
     <string name="login_password">Пароль</string>
     <string name="login_authorize">Войти</string>
@@ -11,4 +11,5 @@
     <string name="login_password_repeat">Повторите пароль</string>
     <string name="login_signup_register">Зарегистрироваться</string>
     <string name="login_signup_eula">Согласен с условиями соглашения</string>
+    <string name="login_signup_compare">Пароли не совпадают</string>
 </resources>

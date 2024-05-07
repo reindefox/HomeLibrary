@@ -74,7 +74,7 @@ public class AuthorizationActivity extends AppCompatActivity {
             }
         });
 
-        binding.signInButton.setOnClickListener(new View.OnClickListener() {
+        binding.signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loginUser();
@@ -106,7 +106,7 @@ public class AuthorizationActivity extends AppCompatActivity {
      * Создание кнопки для перехода на активность регистрации
      */
     private void setupSignUpText() {
-        SpannableString spannableString = new SpannableString(binding.signupText.getText());
+        SpannableString spannableString = new SpannableString(binding.signUpText.getText());
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(@NonNull View view) {
@@ -121,9 +121,9 @@ public class AuthorizationActivity extends AppCompatActivity {
 
         spannableString.setSpan(clickableSpan, 20, 38, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        binding.signupText.setText(spannableString);
-        binding.signupText.setMovementMethod(LinkMovementMethod.getInstance());
-        binding.signupText.setHighlightColor(Color.TRANSPARENT);
+        binding.signUpText.setText(spannableString);
+        binding.signUpText.setMovementMethod(LinkMovementMethod.getInstance());
+        binding.signUpText.setHighlightColor(Color.TRANSPARENT);
     }
 
     /**

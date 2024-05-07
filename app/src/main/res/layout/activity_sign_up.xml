@@ -94,7 +94,7 @@
             android:text="@string/login_signup_eula" />
 
         <Button
-            android:id="@+id/signInButton"
+            android:id="@+id/signUpButton"
             style="@style/Base.Theme.HomeLibrary.AuthorizationButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

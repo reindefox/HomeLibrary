@@ -6,9 +6,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.reindefox.homelibrary.R;
 import com.reindefox.homelibrary.databinding.ActivitySignUpBinding;
 
 /**
@@ -53,27 +55,20 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-        binding.repeatPassword.addTextChangedListener(new TextWatcher() {
+        // TODO текст пароли не совпадают
+        binding.signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void onClick(View v) {
+                assert binding.password.getText() != null;
+                assert binding.repeatPassword.getText() != null;
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String password = binding.password.getText().toString();
-                String repeatPassword = binding.repeatPassword.getText().toString();
+                if (!binding.password.getText().toString().equals(binding.repeatPassword.getText().toString())) {
+                    Toast.makeText(SignUpActivity.this, R.string.login_signup_compare, Toast.LENGTH_SHORT)
+                            .show();
 
-                // TODO Красное поле и текст если пароли не сопадают
-                if (!password.equals(repeatPassword)) {
-//                    binding.repeatPassword
+                    return;
                 }
             }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
         });
-
-        // TODO текст пароли не совпадают
     }
 }
