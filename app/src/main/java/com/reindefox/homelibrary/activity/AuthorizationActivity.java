@@ -16,15 +16,24 @@ import android.text.style.ClickableSpan;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
-import com.reindefox.homelibrary.AuthorizationCredentialsProvider;
+import com.google.android.material.snackbar.Snackbar;
+import com.reindefox.homelibrary.R;
+import com.reindefox.homelibrary.auth.AuthorizationUtils;
 import com.reindefox.homelibrary.databinding.ActivityAuthorizationBinding;
+import com.reindefox.homelibrary.server.WebServerSingleton;
+import com.reindefox.homelibrary.server.service.authorization.AuthorizationDataRequest;
+import com.reindefox.homelibrary.server.service.authorization.AuthorizationDataResponse;
+import com.reindefox.homelibrary.server.service.authorization.AuthorizationService;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Класс активности авторизации пользователя
  */
-public class AuthorizationActivity extends AppCompatActivity {
+public class AuthorizationActivity extends AuthActivityAbstract {
 
     /**
      * Биндинг элемента
@@ -41,8 +50,8 @@ public class AuthorizationActivity extends AppCompatActivity {
      * Базовая инициализация компонента
      *
      * @param savedInstanceState Если действие повторно инициализируется после предыдущего закрытия,
-     *                          то этот пакет содержит данные,
-     *                          которые оно последним предоставило в {@link #onSaveInstanceState}.
+     *                           то этот пакет содержит данные,
+     *                           которые оно последним предоставило в {@link #onSaveInstanceState}.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +86,16 @@ public class AuthorizationActivity extends AppCompatActivity {
         binding.signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginUser();
+                if (binding.login.getText().toString().equals("") || binding.password.getText().toString().equals("")) {
+                    Snackbar.make(view, R.string.login_empty, Snackbar.LENGTH_SHORT)
+                            .show();
+
+                    return;
+                }
+
+                if (attemptLoginUser()) {
+                    redirectToApplication();
+                }
             }
         });
     }
@@ -86,12 +104,12 @@ public class AuthorizationActivity extends AppCompatActivity {
      * Установка ограничений полей данных
      */
     private void setupFieldLimitations() {
-        binding.login.setFilters(new InputFilter[] {
-                new InputFilter.LengthFilter(AuthorizationCredentialsProvider.MAX_USER_DATA_LENGTH)
+        binding.login.setFilters(new InputFilter[]{
+                new InputFilter.LengthFilter(AuthorizationUtils.MAX_USER_DATA_LENGTH)
         });
 
-        binding.password.setFilters(new InputFilter[] {
-                new InputFilter.LengthFilter(AuthorizationCredentialsProvider.MAX_USER_DATA_LENGTH)
+        binding.password.setFilters(new InputFilter[]{
+                new InputFilter.LengthFilter(AuthorizationUtils.MAX_USER_DATA_LENGTH)
         });
     }
 
@@ -112,6 +130,7 @@ public class AuthorizationActivity extends AppCompatActivity {
             public void onClick(@NonNull View view) {
                 redirectToSignUp();
             }
+
             @Override
             public void updateDrawState(@NonNull TextPaint textPaint) {
                 super.updateDrawState(textPaint);
@@ -138,8 +157,43 @@ public class AuthorizationActivity extends AppCompatActivity {
 //        finish();
     }
 
-    private boolean loginUser() {
+    private void redirectToApplication() {
+        Intent intent = new Intent(this, ApplicationActivity.class);
 
+        startActivity(intent);
+
+        finish();
+    }
+
+    private boolean attemptLoginUser() {
+        assert binding.login.getText() != null;
+        assert binding.password.getText() != null;
+
+        String login = binding.login.getText().toString();
+
+        // Сразу хешируем пароль для предотвращения дальнейших утечек
+        String passwordHash = AuthorizationUtils.applySHA256(binding.password.getText().toString());
+
+        AuthorizationService authorizationService = WebServerSingleton.getInstance()
+                .getRetrofit()
+                .create(AuthorizationService.class);
+
+        AuthorizationDataRequest authorizationDataRequest = new AuthorizationDataRequest();
+        authorizationDataRequest.setLogin(login);
+        authorizationDataRequest.setPassword(passwordHash);
+
+        authorizationService.login(authorizationDataRequest).enqueue(new Callback<AuthorizationDataResponse>() {
+            @Override
+            public void onResponse(Call<AuthorizationDataResponse> call, Response<AuthorizationDataResponse> response) {
+                // TODO Обработать токен здесь и сохранить в хранилизе
+            }
+
+            @Override
+            public void onFailure(Call<AuthorizationDataResponse> call, Throwable throwable) {
+                Snackbar.make(AuthorizationActivity.this.getWindow().getDecorView(), R.string.login_signup_error, Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        });
 
         return false;
     }

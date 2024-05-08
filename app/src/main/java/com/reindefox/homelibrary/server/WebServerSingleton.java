@@ -6,16 +6,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Синглтон для установки подключения с удалённым сервером
  */
-public class WebServer {
-    private static WebServer webServer;
+public class WebServerSingleton {
+    private static WebServerSingleton webServer;
 
     private static Retrofit retrofit;
 
     public static final String WEB_SRV_URL = "http://10.0.2.2:8080/";
 
-    public static WebServer getInstance() {
+    public static WebServerSingleton getInstance() {
         if (webServer == null) {
-            webServer = new WebServer();
+            webServer = new WebServerSingleton();
 
             retrofit = new Retrofit.Builder()
                     .baseUrl(WEB_SRV_URL)

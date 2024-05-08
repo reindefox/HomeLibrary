@@ -7,9 +7,15 @@
     <string name="login_login">Логин</string>
     <string name="login_password">Пароль</string>
     <string name="login_authorize">Войти</string>
+    <string name="login_empty">Логин или пароль не могут быть пустыми</string>
     <string name="login_signup">Нет учётной записи? Зарегистрируйтесь!</string>
     <string name="login_password_repeat">Повторите пароль</string>
     <string name="login_signup_register">Зарегистрироваться</string>
     <string name="login_signup_eula">Согласен с условиями соглашения</string>
     <string name="login_signup_compare">Пароли не совпадают</string>
+    <string name="login_signup_error">Произошла какая-то ошибка</string>
+    <string name="app_nav_bottom_book_list">Каталог</string>
+    <string name="app_nav_bottom_book_reading">Читаю</string>
+    <string name="app_nav_bottom_book_settings">Настройки</string>
+    <string name="app_nav_search">Поиск</string>
 </resources>

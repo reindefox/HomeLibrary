@@ -2,21 +2,17 @@ package com.reindefox.homelibrary.activity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import com.google.android.material.snackbar.Snackbar;
 import com.reindefox.homelibrary.R;
 import com.reindefox.homelibrary.databinding.ActivitySignUpBinding;
 
 /**
  * Класс активности регистрации пользователя
  */
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends AuthActivityAbstract {
 
     /**
      * Биндинг элемента
@@ -55,7 +51,6 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-        // TODO текст пароли не совпадают
         binding.signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,7 +58,7 @@ public class SignUpActivity extends AppCompatActivity {
                 assert binding.repeatPassword.getText() != null;
 
                 if (!binding.password.getText().toString().equals(binding.repeatPassword.getText().toString())) {
-                    Toast.makeText(SignUpActivity.this, R.string.login_signup_compare, Toast.LENGTH_SHORT)
+                    Snackbar.make(view, R.string.login_signup_compare, Snackbar.LENGTH_SHORT)
                             .show();
 
                     return;

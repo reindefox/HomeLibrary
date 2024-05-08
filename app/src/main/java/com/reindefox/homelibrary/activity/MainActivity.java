@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.reindefox.homelibrary.R;
 import com.reindefox.homelibrary.databinding.ActivityMainBinding;
-import com.reindefox.homelibrary.server.WebServer;
+import com.reindefox.homelibrary.server.WebServerSingleton;
 import com.reindefox.homelibrary.server.service.connection.TestConnectionData;
 import com.reindefox.homelibrary.server.service.connection.TestConnectionService;
 
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private ActivityMainBinding binding;
 
-    private WebServer webServer;
+    private WebServerSingleton webServer;
 
     /**
      * Базовая инициализация компонента
@@ -50,22 +50,18 @@ public class MainActivity extends AppCompatActivity {
                 .load(R.drawable.fox_loading)
                 .into(binding.foxLoading);
 
-        webServer = WebServer.getInstance();
-        createWebServerConnection();
+        webServer = WebServerSingleton.getInstance();
 
-        // TODO Сделать суперпользователя с возможностью добавлять или удалять книги
-        // TODO Страница с книгой: название, автор, обложка, предпросмотр, добавить/удалить из списка для чтения
-        // TODO Читаю сейчас
+        createWebServerConnection();
     }
 
     /**
-     * Установка подключения к веб-серверу*
+     * Установка подключения к веб-серверу
      */
     private void createWebServerConnection() {
         TestConnectionService testConnectionService = webServer.getRetrofit()
                 .create(TestConnectionService.class);
 
-        // Выполняем запрос на сервер для проверки подключения
         testConnectionService.test().enqueue(new Callback<TestConnectionData>() {
             @Override
             public void onResponse(Call<TestConnectionData> call, Response<TestConnectionData> response) {
@@ -92,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AuthorizationActivity.class);
 
         startActivity(intent);
+
+        // TODO Отправить токен на сервер, и если авторизован, сразу на главную страницу
 
         // Завершение активности загрузки
         finish();
