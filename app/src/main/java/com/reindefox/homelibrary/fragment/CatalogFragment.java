@@ -5,17 +5,20 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import com.reindefox.homelibrary.R;
-import com.reindefox.homelibrary.views.Book;
+import com.reindefox.homelibrary.fragment.adapters.BookRecyclerViewAdapter;
+import com.reindefox.homelibrary.server.model.Book;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,6 +31,10 @@ public class CatalogFragment extends Fragment {
 
     private List<TableRow> rows;
 
+    private List<Book> books;
+
+    private BookRecyclerViewAdapter adapter;
+
     public CatalogFragment() {
     }
 
@@ -38,6 +45,26 @@ public class CatalogFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        books = new ArrayList<>();
+        Book book = new Book();
+        book.setAuthor("asd");
+        book.setTitle("sdd");
+        books.add(book);
+        books.add(book);
+        books.add(book);
+        books.add(book);
+        books.add(book);
+        books.add(book);
+        books.add(book);
+        books.add(book);
+        books.add(book);
+        books.add(book);
+        books.add(book);
+        books.add(book);
+        books.add(book);
+
+        adapter = new BookRecyclerViewAdapter(this.getContext(), books);
     }
 
     @Override
@@ -45,21 +72,11 @@ public class CatalogFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_catalog, container, false);
 
-        TableLayout tableLayout = view.findViewById(R.id.books);
-
-        TableRow tableRow = new TableRow(this.getContext());
-        tableRow.setLayoutParams(
-                new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        );
-
-//
-//        Book book = new Book(this.getContext());
-//        book.setLayoutParams(
-//                new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1)
-//        );
-//        tableRow.addView(book);
-//
-//        tl.addView(tableRow, new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this.getContext(), 2, LinearLayoutManager.VERTICAL, false);
+        RecyclerView recyclerView = view.getRootView().findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
 
         return view;
     }
