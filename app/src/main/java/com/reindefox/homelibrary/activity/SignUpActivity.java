@@ -51,6 +51,7 @@ public class SignUpActivity extends AuthActivityAbstract {
             }
         });
 
+        // TODO finish()
         binding.signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -98,6 +98,14 @@ public class AuthorizationActivity extends AuthActivityAbstract {
                 }
             }
         });
+
+        // TODO Убрать
+        binding.testAccountButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectToApplication();
+            }
+        });
     }
 
     /**
@@ -152,9 +160,6 @@ public class AuthorizationActivity extends AuthActivityAbstract {
         Intent intent = new Intent(this, SignUpActivity.class);
 
         startActivity(intent);
-
-        // TODO проверить
-//        finish();
     }
 
     private void redirectToApplication() {

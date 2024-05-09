@@ -5,12 +5,15 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.material.navigation.NavigationBarView;
 import com.reindefox.homelibrary.R;
 import com.reindefox.homelibrary.databinding.ActivityApplicationBinding;
 import com.reindefox.homelibrary.fragment.CatalogFragment;
 import com.reindefox.homelibrary.fragment.FragmentDependent;
+import com.reindefox.homelibrary.fragment.ReadingFragment;
+import com.reindefox.homelibrary.fragment.SettingsFragment;
 
 /**
  * Основной интерфейс приложения
@@ -21,6 +24,8 @@ public class ApplicationActivity extends FragmentDependent {
      * Биндинг элемента
      */
     private ActivityApplicationBinding binding;
+
+    private Fragment fragment;
 
     /**
      * Базовая инициализация компонента
@@ -36,21 +41,41 @@ public class ApplicationActivity extends FragmentDependent {
         View view = binding.getRoot();
         setContentView(view);
 
+        if (savedInstanceState != null) {
+            // TODO
+        } else {
+            initializeBasicFragment();
+        }
+
         binding.bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                // Нет необходимости менять фрагмент, если находимся уже в нём
+                if (menuItem.getItemId() == binding.bottomNavigationView.getSelectedItemId())
+                    return false;
+
                 if (menuItem.getItemId() == R.id.catalog) {
-                    replaceFragment(R.id.appLayout, CatalogFragment.newInstance());
+                    replaceFragment(R.id.appLayout, fragment = CatalogFragment.newInstance());
                 } else if (menuItem.getItemId() == R.id.reading) {
-                    // TODO
-                    replaceFragment(R.id.appLayout, null);
+                    replaceFragment(R.id.appLayout, fragment = ReadingFragment.newInstance());
                 } else if (menuItem.getItemId() == R.id.settings) {
-                    // TODO
-                    replaceFragment(R.id.appLayout, null);
+                    replaceFragment(R.id.appLayout, fragment = SettingsFragment.newInstance());
                 }
 
-                return false;
+                return true;
             }
         });
+    }
+
+    /**
+     * TODO
+     */
+    private void initializeBasicFragment() {
+        replaceFragment(R.id.appLayout, CatalogFragment.newInstance());
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 }
