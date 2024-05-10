@@ -1,19 +1,19 @@
 package com.reindefox.homelibrary.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TableRow;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.textfield.TextInputEditText;
 import com.reindefox.homelibrary.R;
 import com.reindefox.homelibrary.fragment.adapters.BookRecyclerViewAdapter;
 import com.reindefox.homelibrary.server.model.Book;
@@ -21,17 +21,11 @@ import com.reindefox.homelibrary.server.model.Book;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * TODO
- * A simple {@link Fragment} subclass.
- * Use the {@link CatalogFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class CatalogFragment extends Fragment {
 
     private List<TableRow> rows;
 
-    private List<Book> books;
+    private List<Book> books = new ArrayList<>();
 
     private BookRecyclerViewAdapter adapter;
 
@@ -45,25 +39,6 @@ public class CatalogFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        books = new ArrayList<>();
-        Book book = new Book();
-        book.setAuthor("asd");
-        book.setTitle("sdd");
-        books.add(book);
-        books.add(book);
-        books.add(book);
-        books.add(book);
-        books.add(book);
-        books.add(book);
-        books.add(book);
-        books.add(book);
-        books.add(book);
-        books.add(book);
-        books.add(book);
-        books.add(book);
-        books.add(book);
-
         adapter = new BookRecyclerViewAdapter(this.getContext(), books);
     }
 
@@ -78,16 +53,21 @@ public class CatalogFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
 
+        TextInputEditText textInputEditText = view.findViewById(R.id.searchField);
+        textInputEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
         return view;
-    }
-
-    private void addBook() {
-
-    }
-
-    private TableRow insertNewRowForBooks() {
-        TableRow tableRow = new TableRow(this.getContext());
-
-        return tableRow;
     }
 }

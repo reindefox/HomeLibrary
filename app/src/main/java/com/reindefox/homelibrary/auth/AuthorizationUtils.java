@@ -3,9 +3,6 @@ package com.reindefox.homelibrary.auth;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * TODO
- */
 public class AuthorizationUtils {
     /**
      * Максимальная длина имени пользователя и пароля

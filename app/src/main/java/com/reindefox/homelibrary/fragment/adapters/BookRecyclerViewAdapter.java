@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.reindefox.homelibrary.R;
 import com.reindefox.homelibrary.server.model.Book;
 
@@ -30,13 +31,21 @@ public class BookRecyclerViewAdapter extends RecyclerView.Adapter<BookRecyclerVi
     @Override
     public BookViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.book_card, parent, false);
+
         return new BookViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
-        holder.authorField.setText(books.get(position).getAuthor());
-        holder.titleField.setText(books.get(position).getTitle());
+        Book book = books.get(position);
+
+        holder.authorField.setText(book.getAuthor());
+        holder.titleField.setText(book.getTitle());
+
+        Glide
+                .with(this.context)
+                .load(book.getImageUrl())
+                .into(holder.coverImage);
     }
 
     @Override
