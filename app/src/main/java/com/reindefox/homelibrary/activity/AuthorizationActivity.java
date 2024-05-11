@@ -179,10 +179,6 @@ public class AuthorizationActivity extends AuthActivityAbstract {
         // Сразу хешируем пароль для предотвращения дальнейших утечек
         String passwordHash = AuthorizationUtils.applySHA256(binding.password.getText().toString());
 
-        AuthorizationService authorizationService = WebServerSingleton.getInstance()
-                .getRetrofit()
-                .create(AuthorizationService.class);
-
         AuthorizationDataRequest authorizationDataRequest = new AuthorizationDataRequest();
         authorizationDataRequest.setLogin(login);
         authorizationDataRequest.setPassword(passwordHash);

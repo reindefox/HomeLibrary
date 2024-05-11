@@ -7,6 +7,10 @@ import android.os.PersistableBundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.reindefox.homelibrary.server.WebServerSingleton;
+import com.reindefox.homelibrary.server.service.authorization.AuthorizationService;
+
 public abstract class AuthActivityAbstract extends AppCompatActivity {
     public static final String ARG_ACCOUNT_TYPE = "accountType";
 
@@ -18,10 +22,24 @@ public abstract class AuthActivityAbstract extends AppCompatActivity {
 
     protected AccountManager accountManager;
 
+    protected AuthorizationService authorizationService;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
 
         accountManager = AccountManager.get(this);
+
+        authorizationService = WebServerSingleton.getInstance()
+                .getRetrofit()
+                .create(AuthorizationService.class);
+    }
+
+    protected boolean verifyInputData(TextInputEditText... textInputEditTexts) {
+        // TODO
+        for (TextInputEditText textInputEditText : textInputEditTexts) {
+        }
+
+        return true;
     }
 }

@@ -7,4 +7,7 @@ import retrofit2.http.POST;
 public interface AuthorizationService {
     @POST("/auth/login")
     Call<AuthorizationDataResponse> login(@Body AuthorizationDataRequest request);
+
+    @POST("/auth/reg")
+    Call<AuthorizationDataResponse> signUp(@Body AuthorizationDataRequest request);
 }

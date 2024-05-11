@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
         webServer = WebServerSingleton.getInstance();
 
         createWebServerConnection();
+
+        // TODO если в AccountManager есть запись, пропускаем авторизацию
     }
 
     /**

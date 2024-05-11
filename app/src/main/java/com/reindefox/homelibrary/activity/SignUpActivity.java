@@ -7,7 +7,16 @@ import android.widget.CompoundButton;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.reindefox.homelibrary.R;
+import com.reindefox.homelibrary.auth.AuthorizationUtils;
 import com.reindefox.homelibrary.databinding.ActivitySignUpBinding;
+import com.reindefox.homelibrary.server.WebServerSingleton;
+import com.reindefox.homelibrary.server.service.authorization.AuthorizationDataRequest;
+import com.reindefox.homelibrary.server.service.authorization.AuthorizationDataResponse;
+import com.reindefox.homelibrary.server.service.authorization.AuthorizationService;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Класс активности регистрации пользователя
@@ -64,6 +73,34 @@ public class SignUpActivity extends AuthActivityAbstract {
 
                     return;
                 }
+
+                signUp();
+            }
+        });
+    }
+
+    private void signUp() {
+        assert binding.login.getText() != null;
+        assert binding.password.getText() != null;
+
+        String login = binding.login.getText().toString();
+
+        // Сразу хешируем пароль для предотвращения дальнейших утечек
+        String passwordHash = AuthorizationUtils.applySHA256(binding.password.getText().toString());
+
+        AuthorizationDataRequest authorizationDataRequest = new AuthorizationDataRequest();
+        authorizationDataRequest.setLogin(login);
+        authorizationDataRequest.setPassword(passwordHash);
+
+        authorizationService.signUp(new AuthorizationDataRequest()).enqueue(new Callback<AuthorizationDataResponse>() {
+            @Override
+            public void onResponse(Call<AuthorizationDataResponse> call, Response<AuthorizationDataResponse> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<AuthorizationDataResponse> call, Throwable throwable) {
+
             }
         });
     }
