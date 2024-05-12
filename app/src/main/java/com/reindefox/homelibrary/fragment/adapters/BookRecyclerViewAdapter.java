@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.reindefox.homelibrary.R;
 import com.reindefox.homelibrary.server.model.Book;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BookRecyclerViewAdapter extends RecyclerView.Adapter<BookRecyclerViewAdapter.BookViewHolder> {
@@ -52,6 +53,11 @@ public class BookRecyclerViewAdapter extends RecyclerView.Adapter<BookRecyclerVi
     @Override
     public int getItemCount() {
         return books.size();
+    }
+
+    public void searchFilter(ArrayList<Book> arrayList) {
+        books = arrayList;
+        notifyDataSetChanged();
     }
 
     public static class BookViewHolder extends RecyclerView.ViewHolder {

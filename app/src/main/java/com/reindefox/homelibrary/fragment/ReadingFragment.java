@@ -12,9 +12,6 @@ import com.reindefox.homelibrary.R;
 
 public class ReadingFragment extends Fragment {
 
-    public ReadingFragment() {
-    }
-
     public static ReadingFragment newInstance() {
         return new ReadingFragment();
     }

@@ -1,16 +1,24 @@
 package com.reindefox.homelibrary.server.model;
 
-public class Book {
-    private int id;
+import com.google.gson.annotations.SerializedName;
 
+public class Book {
+    @SerializedName("id")
+    private Integer id;
+
+    @SerializedName("title")
     private String title;
 
+    @SerializedName("author")
     private String author;
 
-    private int year;
+    @SerializedName("year")
+    private Integer year;
 
+    @SerializedName("image_url")
     private String imageUrl;
 
+    @SerializedName("description")
     private String description;
 
     public int getId() {

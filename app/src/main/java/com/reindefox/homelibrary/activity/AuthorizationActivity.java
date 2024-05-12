@@ -13,7 +13,6 @@ import android.text.TextPaint;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -22,10 +21,10 @@ import com.google.android.material.snackbar.Snackbar;
 import com.reindefox.homelibrary.R;
 import com.reindefox.homelibrary.auth.AuthorizationUtils;
 import com.reindefox.homelibrary.databinding.ActivityAuthorizationBinding;
-import com.reindefox.homelibrary.server.WebServerSingleton;
 import com.reindefox.homelibrary.server.service.authorization.AuthorizationDataRequest;
-import com.reindefox.homelibrary.server.service.authorization.AuthorizationDataResponse;
-import com.reindefox.homelibrary.server.service.authorization.AuthorizationService;
+import com.reindefox.homelibrary.server.service.authorization.SignInResponse;
+
+import java.net.HttpURLConnection;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,8 +44,6 @@ public class AuthorizationActivity extends AuthActivityAbstract {
 
     private SharedPreferences.Editor editor;
 
-    private static final String LOGIN = "username";
-
     /**
      * Базовая инициализация компонента
      *
@@ -61,8 +58,8 @@ public class AuthorizationActivity extends AuthActivityAbstract {
         View view = binding.getRoot();
         setContentView(view);
 
-        sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
-        editor = getSharedPreferences("user", MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences(AuthorizationUtils.prefsUser, Context.MODE_PRIVATE);
+        editor = getSharedPreferences(AuthorizationUtils.prefsUser, MODE_PRIVATE)
                 .edit();
 
         setupFieldLimitations();
@@ -75,7 +72,7 @@ public class AuthorizationActivity extends AuthActivityAbstract {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                editor.putString(LOGIN, s.toString());
+                editor.putString(ARG_USER_LOGIN, s.toString());
                 editor.apply();
             }
 
@@ -124,7 +121,7 @@ public class AuthorizationActivity extends AuthActivityAbstract {
     protected void onResume() {
         super.onResume();
 
-        binding.login.setText(sharedPreferences.getString(LOGIN, null));
+        binding.login.setText(sharedPreferences.getString(ARG_USER_LOGIN, null));
     }
 
     /**
@@ -169,7 +166,7 @@ public class AuthorizationActivity extends AuthActivityAbstract {
         finish();
     }
 
-    private boolean attemptLoginUser() {
+    private void attemptLoginUser() {
         assert binding.login.getText() != null;
         assert binding.password.getText() != null;
 
@@ -182,26 +179,39 @@ public class AuthorizationActivity extends AuthActivityAbstract {
         authorizationDataRequest.setUsername(login);
         authorizationDataRequest.setPassword(passwordHash);
 
-        authorizationService.login(authorizationDataRequest).enqueue(new Callback<AuthorizationDataResponse>() {
+        authorizationService.login(authorizationDataRequest).enqueue(new Callback<SignInResponse>() {
             @Override
-            public void onResponse(Call<AuthorizationDataResponse> call, Response<AuthorizationDataResponse> response) {
-                Log.i("a", response.toString());
+            public void onResponse(Call<SignInResponse> call, Response<SignInResponse> response) {
+                switch (response.code()) {
+                    case HttpURLConnection.HTTP_OK: {
+                        if (response.body() == null) {
+                            Snackbar.make(AuthorizationActivity.this.getWindow().getDecorView(), R.string.login_signup_error, Snackbar.LENGTH_SHORT)
+                                    .show();
+                            return;
+                        }
 
-                assert response.body() != null;
-                editor.putString(ARG_ACCOUNT_TYPE, login);
-                editor.putString(ARG_AUTH_TOKEN_TYPE, response.body().getAuthToken())
-                        .apply();
+                        editor.putString(ARG_USER_LOGIN, login);
+                        editor.putString(ARG_USER_ROLE, response.body().getRole());
+                        editor.putString(ARG_AUTH_TOKEN_TYPE, response.body().getToken());
+                        editor.apply();
 
-                redirectToApplication();
+                        redirectToApplication();
+                        finish();
+                        break;
+                    }
+                    case HttpURLConnection.HTTP_FORBIDDEN: {
+                        Snackbar.make(AuthorizationActivity.this.getWindow().getDecorView(), R.string.login_signup_wrong_pwd, Snackbar.LENGTH_SHORT)
+                                .show();
+                        break;
+                    }
+                }
             }
 
             @Override
-            public void onFailure(Call<AuthorizationDataResponse> call, Throwable throwable) {
+            public void onFailure(Call<SignInResponse> call, Throwable throwable) {
                 Snackbar.make(AuthorizationActivity.this.getWindow().getDecorView(), R.string.login_signup_error, Snackbar.LENGTH_SHORT)
                         .show();
             }
         });
-
-        return false;
     }
 }

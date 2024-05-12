@@ -1,6 +1,7 @@
 package com.reindefox.homelibrary.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
@@ -53,8 +54,6 @@ public class MainActivity extends AppCompatActivity {
         webServer = WebServerSingleton.getInstance();
 
         createWebServerConnection();
-
-        // TODO если в AccountManager есть запись, пропускаем авторизацию
     }
 
     /**
@@ -90,8 +89,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AuthorizationActivity.class);
 
         startActivity(intent);
-
-        // TODO Отправить токен на сервер, и если авторизован, сразу на главную страницу
 
         // Завершение активности загрузки
         finish();

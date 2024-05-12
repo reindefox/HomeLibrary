@@ -42,11 +42,7 @@ public class ApplicationActivity extends FragmentDependent {
         View view = binding.getRoot();
         setContentView(view);
 
-        if (savedInstanceState != null) {
-            // TODO
-        } else {
-            initializeBasicFragment();
-        }
+        initializeBasicFragment();
 
         binding.bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -70,14 +66,10 @@ public class ApplicationActivity extends FragmentDependent {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                // TODO
             }
         });
     }
 
-    /**
-     * TODO
-     */
     private void initializeBasicFragment() {
         replaceFragment(R.id.appLayout, CatalogFragment.newInstance());
     }

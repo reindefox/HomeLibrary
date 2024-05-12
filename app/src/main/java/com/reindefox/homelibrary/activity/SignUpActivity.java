@@ -2,23 +2,17 @@ package com.reindefox.homelibrary.activity;
 
 import static com.reindefox.homelibrary.auth.AuthorizationUtils.MAX_USER_DATA_LENGTH;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.reindefox.homelibrary.R;
-import com.reindefox.homelibrary.auth.AccountUtils;
 import com.reindefox.homelibrary.auth.AuthorizationUtils;
 import com.reindefox.homelibrary.databinding.ActivitySignUpBinding;
-import com.reindefox.homelibrary.server.WebServerSingleton;
 import com.reindefox.homelibrary.server.service.authorization.AuthorizationDataRequest;
-import com.reindefox.homelibrary.server.service.authorization.AuthorizationDataResponse;
-import com.reindefox.homelibrary.server.service.authorization.AuthorizationService;
+import com.reindefox.homelibrary.server.service.authorization.SignInResponse;
 
 import java.net.HttpURLConnection;
 
@@ -68,7 +62,6 @@ public class SignUpActivity extends AuthActivityAbstract {
             }
         });
 
-        // TODO finish()
         binding.signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,9 +117,9 @@ public class SignUpActivity extends AuthActivityAbstract {
         authorizationDataRequest.setUsername(login);
         authorizationDataRequest.setPassword(passwordHash);
 
-        authorizationService.signUp(authorizationDataRequest).enqueue(new Callback<AuthorizationDataResponse>() {
+        authorizationService.signUp(authorizationDataRequest).enqueue(new Callback<SignInResponse>() {
             @Override
-            public void onResponse(Call<AuthorizationDataResponse> call, Response<AuthorizationDataResponse> response) {
+            public void onResponse(Call<SignInResponse> call, Response<SignInResponse> response) {
                 switch (response.code()) {
                     case HttpURLConnection.HTTP_CONFLICT: {
                         Snackbar.make(binding.getRoot().getRootView(), getString(R.string.login_signup_login_conflict), Snackbar.LENGTH_SHORT)
@@ -135,23 +128,16 @@ public class SignUpActivity extends AuthActivityAbstract {
                         break;
                     }
                     case HttpURLConnection.HTTP_OK: {
-                        Account account = new Account(login, AccountUtils.ACCOUNT_TYPE);
+                        Snackbar.make(binding.getRoot().getRootView(), getString(R.string.login_signup_created), Snackbar.LENGTH_SHORT)
+                                .show();
 
-                        accountManager.setAuthToken(account, AccountUtils.ACCOUNT_TYPE, response.body().getAuthToken());
                         break;
                     }
                 }
-
-//                Account account = new Account(AccountUtils.ACCOUNT_TYPE, ARG_ACCOUNT_TYPE);
-//
-//                Log.i("123", response.toString());
-////                accountManager.setAuthToken(account, ARG_AUTH_TOKEN_TYPE, response.body().getAuthToken());
-//
-//                Log.i("123", accountManager.peekAuthToken(account, ARG_AUTH_TOKEN_TYPE));
             }
 
             @Override
-            public void onFailure(Call<AuthorizationDataResponse> call, Throwable throwable) {
+            public void onFailure(Call<SignInResponse> call, Throwable throwable) {
 
             }
         });

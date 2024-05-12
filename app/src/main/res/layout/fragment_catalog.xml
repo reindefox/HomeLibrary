@@ -18,6 +18,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/searchField"
             android:layout_width="match_parent"
+            android:singleLine="true"
             android:layout_height="40dp"
             android:drawableStart="@drawable/search_24dp_fill0_wght400_grad0_opsz24"
             android:drawableTint="#80000000"

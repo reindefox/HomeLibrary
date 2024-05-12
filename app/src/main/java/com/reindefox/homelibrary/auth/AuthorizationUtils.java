@@ -4,6 +4,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class AuthorizationUtils {
+    public static final String prefsUser = "user";
+
     /**
      * Максимальная длина имени пользователя и пароля
      */
