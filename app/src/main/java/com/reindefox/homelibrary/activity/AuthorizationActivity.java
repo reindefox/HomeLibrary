@@ -13,6 +13,7 @@ import android.text.TextPaint;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -44,7 +45,7 @@ public class AuthorizationActivity extends AuthActivityAbstract {
 
     private SharedPreferences.Editor editor;
 
-    private static final String LOGIN = "login";
+    private static final String LOGIN = "username";
 
     /**
      * Базовая инициализация компонента
@@ -83,7 +84,7 @@ public class AuthorizationActivity extends AuthActivityAbstract {
             }
         });
 
-        binding.signUpButton.setOnClickListener(new View.OnClickListener() {
+        binding.signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (binding.login.getText().toString().equals("") || binding.password.getText().toString().equals("")) {
@@ -93,9 +94,7 @@ public class AuthorizationActivity extends AuthActivityAbstract {
                     return;
                 }
 
-                if (attemptLoginUser()) {
-                    redirectToApplication();
-                }
+                attemptLoginUser();
             }
         });
 
@@ -180,13 +179,20 @@ public class AuthorizationActivity extends AuthActivityAbstract {
         String passwordHash = AuthorizationUtils.applySHA256(binding.password.getText().toString());
 
         AuthorizationDataRequest authorizationDataRequest = new AuthorizationDataRequest();
-        authorizationDataRequest.setLogin(login);
+        authorizationDataRequest.setUsername(login);
         authorizationDataRequest.setPassword(passwordHash);
 
         authorizationService.login(authorizationDataRequest).enqueue(new Callback<AuthorizationDataResponse>() {
             @Override
             public void onResponse(Call<AuthorizationDataResponse> call, Response<AuthorizationDataResponse> response) {
-                // TODO Обработать токен здесь и сохранить в хранилизе
+                Log.i("a", response.toString());
+
+                assert response.body() != null;
+                editor.putString(ARG_ACCOUNT_TYPE, login);
+                editor.putString(ARG_AUTH_TOKEN_TYPE, response.body().getAuthToken())
+                        .apply();
+
+                redirectToApplication();
             }
 
             @Override

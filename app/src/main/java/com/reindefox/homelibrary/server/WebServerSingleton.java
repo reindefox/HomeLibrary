@@ -2,6 +2,7 @@ package com.reindefox.homelibrary.server;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * Синглтон для установки подключения с удалённым сервером
@@ -19,6 +20,7 @@ public class WebServerSingleton {
 
             retrofit = new Retrofit.Builder()
                     .baseUrl(WEB_SRV_URL)
+                    .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }

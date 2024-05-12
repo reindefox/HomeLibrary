@@ -8,4 +8,12 @@ public class AuthorizationDataResponse {
 
     @SerializedName("auth_token")
     private String authToken;
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public String getAuthToken() {
+        return authToken;
+    }
 }

@@ -28,7 +28,7 @@
 
         <Button
             android:id="@+id/testAccountButton"
-            style="@style/Base.Theme.HomeLibrary.AuthorizationButton"
+            style="@style/Base.Theme.HomeLibrary.DefaultButton"
             android:layout_width="match_parent"
             android:text="@string/login_test_account" />
 
@@ -79,8 +79,8 @@
             android:background="?android:attr/listDivider" />
 
         <Button
-            android:id="@+id/signUpButton"
-            style="@style/Base.Theme.HomeLibrary.AuthorizationButton"
+            android:id="@+id/signInButton"
+            style="@style/Base.Theme.HomeLibrary.DefaultButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/login_authorize" />

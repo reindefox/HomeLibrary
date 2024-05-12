@@ -1,6 +1,7 @@
 package com.reindefox.homelibrary.fragment.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +68,13 @@ public class BookRecyclerViewAdapter extends RecyclerView.Adapter<BookRecyclerVi
             coverImage = itemView.findViewById(R.id.coverImage);
             authorField = itemView.findViewById(R.id.authorField);
             titleField = itemView.findViewById(R.id.titleField);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // TODO
+                }
+            });
         }
     }
 }

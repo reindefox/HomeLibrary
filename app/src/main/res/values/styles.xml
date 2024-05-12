@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Base.Theme.HomeLibrary.AuthorizationButton">
+    <style name="Base.Theme.HomeLibrary.DefaultButton">
         <item name="cornerRadius">10dp</item>
         <item name="backgroundTint">@color/grey</item>
         <item name="android:layout_height">50dp</item>

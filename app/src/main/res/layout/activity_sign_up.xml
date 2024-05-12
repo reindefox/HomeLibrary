@@ -95,7 +95,7 @@
 
         <Button
             android:id="@+id/signUpButton"
-            style="@style/Base.Theme.HomeLibrary.AuthorizationButton"
+            style="@style/Base.Theme.HomeLibrary.DefaultButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/login_signup_register" />
