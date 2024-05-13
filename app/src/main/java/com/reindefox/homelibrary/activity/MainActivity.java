@@ -1,5 +1,7 @@
 package com.reindefox.homelibrary.activity;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -66,18 +68,18 @@ public class MainActivity extends AppCompatActivity {
         testConnectionService.test().enqueue(new Callback<TestConnectionData>() {
             @Override
             public void onResponse(Call<TestConnectionData> call, Response<TestConnectionData> response) {
+                // Проверяем успешность подключения
                 if (response.code() == HttpURLConnection.HTTP_OK) {
-                    initializeAuthorizationActivity();
+                    // Переадресуем на авторизацию
+                    initializeAuthorizationActivity(MainActivity.this);
+                } else {
+                    throwConnectionUIError();
                 }
             }
 
             @Override
             public void onFailure(Call<TestConnectionData> call, Throwable throwable) {
-                Glide.with(binding.getRoot().getRootView())
-                        .load(R.drawable.baseline_error_outline_24)
-                        .into(binding.foxLoading);
-
-                binding.loadingText.setText(R.string.loading_db_fail);
+                throwConnectionUIError();
             }
         });
     }
@@ -85,12 +87,21 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Инициализация активности с авторизацией
      */
-    private void initializeAuthorizationActivity() {
-        Intent intent = new Intent(this, AuthorizationActivity.class);
+    public static void initializeAuthorizationActivity(Context context) {
+        Intent intent = new Intent(context, AuthorizationActivity.class);
 
-        startActivity(intent);
+        context.startActivity(intent);
 
-        // Завершение активности загрузки
-        finish();
+        if (context instanceof Activity) {
+            ((Activity) context).finish();
+        }
+    }
+
+    private void throwConnectionUIError() {
+        Glide.with(binding.getRoot().getRootView())
+                .load(R.drawable.baseline_error_outline_24)
+                .into(binding.foxLoading);
+
+        binding.loadingText.setText(R.string.loading_db_fail);
     }
 }

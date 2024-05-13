@@ -1,7 +1,5 @@
 package com.reindefox.homelibrary.fragment;
 
-import static com.reindefox.homelibrary.activity.AuthActivityAbstract.ARG_AUTH_TOKEN_TYPE;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.reindefox.homelibrary.R;
+import com.reindefox.homelibrary.activity.AbstractAuthActivity;
 import com.reindefox.homelibrary.auth.AuthorizationUtils;
 import com.reindefox.homelibrary.fragment.adapters.BookRecyclerViewAdapter;
 import com.reindefox.homelibrary.server.WebServerSingleton;
@@ -26,7 +26,6 @@ import com.reindefox.homelibrary.server.service.book.BookService;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -48,21 +47,27 @@ public class CatalogFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        books = new ArrayList<>();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        books = new ArrayList<>();
-        adapter = new BookRecyclerViewAdapter(this.getContext(), books);
+        View view = inflater.inflate(R.layout.fragment_catalog, container, false);
 
         bookService = WebServerSingleton.getInstance()
                 .getRetrofit()
                 .create(BookService.class);
 
-        View view = inflater.inflate(R.layout.fragment_catalog, container, false);
+        adapter = new BookRecyclerViewAdapter(this.getActivity(), books);
 
-        sharedPreferences = getContext().getSharedPreferences(AuthorizationUtils.prefsUser, Context.MODE_PRIVATE);
+        sharedPreferences = getContext().getSharedPreferences(AuthorizationUtils.PREFS_USER, Context.MODE_PRIVATE);
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this.getContext(), 2, LinearLayoutManager.VERTICAL, false);
-        RecyclerView recyclerView = view.getRootView().findViewById(R.id.recyclerView);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
@@ -75,16 +80,7 @@ public class CatalogFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                ArrayList<Book> arrayList = new ArrayList<>();
-
-                for (Book book : books) {
-                    if (book.getTitle().toLowerCase().contains(s.toString().toLowerCase())
-                            || book.getAuthor().toLowerCase().contains(s.toString().toLowerCase())) {
-                        arrayList.add(book);
-                    }
-                }
-
-                adapter.searchFilter(arrayList);
+                applySearchFilter(String.valueOf(s));
             }
 
             @Override
@@ -92,19 +88,40 @@ public class CatalogFragment extends Fragment {
             }
         });
 
-        bookService.getAll("Bearer " + sharedPreferences.getString(ARG_AUTH_TOKEN_TYPE, ""))
+        getAllBooks();
+
+        return view;
+    }
+
+    private void getAllBooks() {
+        bookService.getAll("Bearer " + sharedPreferences.getString(AbstractAuthActivity.ARG_AUTH_TOKEN_TYPE, ""))
                 .enqueue(new Callback<Collection<Book>>() {
                     @Override
                     public void onResponse(Call<Collection<Book>> call, Response<Collection<Book>> response) {
+                        books.clear();
+
                         books.addAll(response.body());
+
                         adapter.notifyDataSetChanged();
                     }
 
                     @Override
                     public void onFailure(Call<Collection<Book>> call, Throwable throwable) {
+                        // TODO
                     }
                 });
+    }
 
-        return view;
+    private void applySearchFilter(String s) {
+        ArrayList<Book> arrayList = new ArrayList<>();
+
+        for (Book book : books) {
+            if (book.getTitle().toLowerCase().contains(s.toLowerCase())
+                    || book.getAuthor().toLowerCase().contains(s.toLowerCase())) {
+                arrayList.add(book);
+            }
+        }
+
+        adapter.searchFilter(arrayList);
     }
 }

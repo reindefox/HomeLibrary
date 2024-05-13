@@ -4,7 +4,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class AuthorizationUtils {
-    public static final String prefsUser = "user";
+    public static final String PREFS_USER = "user";
+
+    public static final String PREFS_AUTO_LOGIN = "keep_login";
 
     /**
      * Максимальная длина имени пользователя и пароля
@@ -23,7 +25,6 @@ public class AuthorizationUtils {
             }
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
             return null;
         }
     }

@@ -13,6 +13,7 @@ import android.text.TextPaint;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -33,7 +34,7 @@ import retrofit2.Response;
 /**
  * Класс активности авторизации пользователя
  */
-public class AuthorizationActivity extends AuthActivityAbstract {
+public class AuthorizationActivity extends AbstractAuthActivity {
 
     /**
      * Биндинг элемента
@@ -43,6 +44,8 @@ public class AuthorizationActivity extends AuthActivityAbstract {
     private SharedPreferences sharedPreferences;
 
     private SharedPreferences.Editor editor;
+
+    public static final String spLogin = "login_cache";
 
     /**
      * Базовая инициализация компонента
@@ -58,13 +61,14 @@ public class AuthorizationActivity extends AuthActivityAbstract {
         View view = binding.getRoot();
         setContentView(view);
 
-        sharedPreferences = getSharedPreferences(AuthorizationUtils.prefsUser, Context.MODE_PRIVATE);
-        editor = getSharedPreferences(AuthorizationUtils.prefsUser, MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences(AuthorizationUtils.PREFS_USER, Context.MODE_PRIVATE);
+        editor = getSharedPreferences(AuthorizationUtils.PREFS_USER, MODE_PRIVATE)
                 .edit();
 
         setupFieldLimitations();
         setupSignUpText();
 
+        // Сохранение логина в SP
         binding.login.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -72,7 +76,7 @@ public class AuthorizationActivity extends AuthActivityAbstract {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                editor.putString(ARG_USER_LOGIN, s.toString());
+                editor.putString(spLogin, s.toString());
                 editor.apply();
             }
 
@@ -95,13 +99,23 @@ public class AuthorizationActivity extends AuthActivityAbstract {
             }
         });
 
-        // TODO Убрать
         binding.testAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                redirectToApplication();
+                binding.login.setText("qq");
+                binding.password.setText("qq");
+
+                attemptLoginUser();
             }
         });
+
+        // Автоматическая авторизация при сохраненных параметрах
+        if (sharedPreferences.getBoolean(AuthorizationUtils.PREFS_AUTO_LOGIN, false)) {
+            binding.login.setText(sharedPreferences.getString(ARG_USER_LOGIN, null));
+            binding.password.setText(sharedPreferences.getString(ARG_USER_PWD, null));
+
+            attemptLoginUser();
+        }
     }
 
     /**
@@ -121,7 +135,7 @@ public class AuthorizationActivity extends AuthActivityAbstract {
     protected void onResume() {
         super.onResume();
 
-        binding.login.setText(sharedPreferences.getString(ARG_USER_LOGIN, null));
+        binding.login.setText(sharedPreferences.getString(spLogin, null));
     }
 
     /**
@@ -172,12 +186,13 @@ public class AuthorizationActivity extends AuthActivityAbstract {
 
         String login = binding.login.getText().toString();
 
-        // Сразу хешируем пароль для предотвращения дальнейших утечек
         String passwordHash = AuthorizationUtils.applySHA256(binding.password.getText().toString());
 
         AuthorizationDataRequest authorizationDataRequest = new AuthorizationDataRequest();
         authorizationDataRequest.setUsername(login);
         authorizationDataRequest.setPassword(passwordHash);
+
+        setDataInputWhenLoading(false);
 
         authorizationService.login(authorizationDataRequest).enqueue(new Callback<SignInResponse>() {
             @Override
@@ -185,12 +200,13 @@ public class AuthorizationActivity extends AuthActivityAbstract {
                 switch (response.code()) {
                     case HttpURLConnection.HTTP_OK: {
                         if (response.body() == null) {
-                            Snackbar.make(AuthorizationActivity.this.getWindow().getDecorView(), R.string.login_signup_error, Snackbar.LENGTH_SHORT)
+                            Snackbar.make(AuthorizationActivity.this.getWindow().getDecorView(), R.string.error, Snackbar.LENGTH_SHORT)
                                     .show();
                             return;
                         }
 
                         editor.putString(ARG_USER_LOGIN, login);
+                        editor.putString(ARG_USER_PWD, binding.password.getText().toString());
                         editor.putString(ARG_USER_ROLE, response.body().getRole());
                         editor.putString(ARG_AUTH_TOKEN_TYPE, response.body().getToken());
                         editor.apply();
@@ -200,6 +216,8 @@ public class AuthorizationActivity extends AuthActivityAbstract {
                         break;
                     }
                     case HttpURLConnection.HTTP_FORBIDDEN: {
+                        setDataInputWhenLoading(true);
+
                         Snackbar.make(AuthorizationActivity.this.getWindow().getDecorView(), R.string.login_signup_wrong_pwd, Snackbar.LENGTH_SHORT)
                                 .show();
                         break;
@@ -209,9 +227,17 @@ public class AuthorizationActivity extends AuthActivityAbstract {
 
             @Override
             public void onFailure(Call<SignInResponse> call, Throwable throwable) {
-                Snackbar.make(AuthorizationActivity.this.getWindow().getDecorView(), R.string.login_signup_error, Snackbar.LENGTH_SHORT)
+                setDataInputWhenLoading(true);
+
+                Snackbar.make(AuthorizationActivity.this.getWindow().getDecorView(), R.string.error, Snackbar.LENGTH_SHORT)
                         .show();
             }
         });
+    }
+
+    private void setDataInputWhenLoading(boolean flag) {
+        binding.signInButton.setEnabled(flag);
+        binding.login.setEnabled(flag);
+        binding.password.setEnabled(flag);
     }
 }

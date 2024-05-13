@@ -18,7 +18,7 @@
     <string name="login_signup_enter_login">Введите логин</string>
     <string name="login_signup_enter_pwd">Введите пароль</string>
     <string name="login_signup_enter_pwd_r">Повторите пароль</string>
-    <string name="login_signup_error">Произошла какая-то ошибка</string>
+    <string name="error">Произошла какая-то ошибка</string>
     <string name="login_signup_wrong_pwd">Неверный логин/пароль</string>
     <string name="login_signup_login_conflict">Пользователем с таким логином уже есть</string>
     <string name="login_signup_created">Пользователем создан</string>
@@ -26,4 +26,9 @@
     <string name="app_nav_bottom_book_reading">Читаю</string>
     <string name="app_nav_bottom_book_settings">Настройки</string>
     <string name="app_nav_search">Поиск</string>
+    <string name="app_book_favorite">В избранное</string>
+    <string name="app_book_favorite_active">Уже в избранном</string>
+    <string name="app_settings_user">Пользователь</string>
+    <string name="app_settings_keep_login">Автоматическая авторизация</string>
+    <string name="app_settings_logout">Выйти из аккаунта</string>
 </resources>

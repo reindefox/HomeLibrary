@@ -2,7 +2,9 @@ package com.reindefox.homelibrary.server.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Book {
+import java.io.Serializable;
+
+public class Book implements Serializable {
     @SerializedName("id")
     private Integer id;
 

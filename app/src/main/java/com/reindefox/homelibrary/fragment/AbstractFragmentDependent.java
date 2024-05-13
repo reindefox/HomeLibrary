@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-public abstract class FragmentDependent extends AppCompatActivity {
+public abstract class AbstractFragmentDependent extends AppCompatActivity {
     protected FragmentManager fragmentManager;
 
     @Override

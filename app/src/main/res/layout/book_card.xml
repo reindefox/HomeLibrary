@@ -18,7 +18,7 @@
 
         <ImageView
             android:id="@+id/coverImage"
-            android:layout_width="100dp"
+            android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_weight="1"
             android:maxWidth="100dp"

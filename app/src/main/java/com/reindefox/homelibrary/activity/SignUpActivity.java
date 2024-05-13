@@ -23,7 +23,7 @@ import retrofit2.Response;
 /**
  * Класс активности регистрации пользователя
  */
-public class SignUpActivity extends AuthActivityAbstract {
+public class SignUpActivity extends AbstractAuthActivity {
 
     /**
      * Биндинг элемента
@@ -110,7 +110,6 @@ public class SignUpActivity extends AuthActivityAbstract {
     }
 
     private void signUp(String login, String password) {
-        // Сразу хешируем пароль для предотвращения дальнейших утечек
         String passwordHash = AuthorizationUtils.applySHA256(binding.password.getText().toString());
 
         AuthorizationDataRequest authorizationDataRequest = new AuthorizationDataRequest();

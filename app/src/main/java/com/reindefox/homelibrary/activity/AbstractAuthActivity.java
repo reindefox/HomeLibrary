@@ -8,10 +8,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.reindefox.homelibrary.server.WebServerSingleton;
 import com.reindefox.homelibrary.server.service.authorization.AuthorizationService;
 
-public abstract class AuthActivityAbstract extends AppCompatActivity {
+public abstract class AbstractAuthActivity extends AppCompatActivity {
     public static final String ARG_AUTH_TOKEN_TYPE = "token";
 
     public static final String ARG_USER_LOGIN = "login";
+
+    public static final String ARG_USER_PWD = "password";
 
     public static final String ARG_USER_ROLE = "role";
 

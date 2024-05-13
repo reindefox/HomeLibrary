@@ -12,14 +12,14 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.reindefox.homelibrary.R;
 import com.reindefox.homelibrary.databinding.ActivityApplicationBinding;
 import com.reindefox.homelibrary.fragment.CatalogFragment;
-import com.reindefox.homelibrary.fragment.FragmentDependent;
+import com.reindefox.homelibrary.fragment.AbstractFragmentDependent;
 import com.reindefox.homelibrary.fragment.ReadingFragment;
 import com.reindefox.homelibrary.fragment.SettingsFragment;
 
 /**
  * Основной интерфейс приложения
  */
-public class ApplicationActivity extends FragmentDependent {
+public class ApplicationActivity extends AbstractFragmentDependent {
 
     /**
      * Биндинг элемента
@@ -32,8 +32,8 @@ public class ApplicationActivity extends FragmentDependent {
      * Базовая инициализация компонента
      *
      * @param savedInstanceState Если действие повторно инициализируется после предыдущего закрытия,
-     *                          то этот пакет содержит данные,
-     *                          которые оно последним предоставило в {@link #onSaveInstanceState}.
+     *                           то этот пакет содержит данные,
+     *                           которые оно последним предоставило в {@link #onSaveInstanceState}.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +47,6 @@ public class ApplicationActivity extends FragmentDependent {
         binding.bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                // Нет необходимости менять фрагмент, если находимся уже в нём
-                if (menuItem.getItemId() == binding.bottomNavigationView.getSelectedItemId())
-                    return false;
-
                 if (menuItem.getItemId() == R.id.catalog) {
                     replaceFragment(R.id.appLayout, fragment = CatalogFragment.newInstance());
                 } else if (menuItem.getItemId() == R.id.reading) {
@@ -60,12 +56,6 @@ public class ApplicationActivity extends FragmentDependent {
                 }
 
                 return true;
-            }
-        });
-
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
             }
         });
     }
