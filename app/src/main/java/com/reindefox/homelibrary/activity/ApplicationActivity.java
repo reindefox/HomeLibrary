@@ -26,8 +26,6 @@ public class ApplicationActivity extends AbstractFragmentDependent {
      */
     private ActivityApplicationBinding binding;
 
-    private Fragment fragment;
-
     /**
      * Базовая инициализация компонента
      *
@@ -48,11 +46,11 @@ public class ApplicationActivity extends AbstractFragmentDependent {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 if (menuItem.getItemId() == R.id.catalog) {
-                    replaceFragment(R.id.appLayout, fragment = CatalogFragment.newInstance());
+                    replaceFragment(R.id.appLayout, CatalogFragment.newInstance());
                 } else if (menuItem.getItemId() == R.id.reading) {
-                    replaceFragment(R.id.appLayout, fragment = ReadingFragment.newInstance());
+                    replaceFragment(R.id.appLayout, ReadingFragment.newInstance());
                 } else if (menuItem.getItemId() == R.id.settings) {
-                    replaceFragment(R.id.appLayout, fragment = SettingsFragment.newInstance());
+                    replaceFragment(R.id.appLayout, SettingsFragment.newInstance());
                 }
 
                 return true;

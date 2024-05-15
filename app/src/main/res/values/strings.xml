@@ -31,4 +31,12 @@
     <string name="app_settings_user">Пользователь</string>
     <string name="app_settings_keep_login">Автоматическая авторизация</string>
     <string name="app_settings_logout">Выйти из аккаунта</string>
+    <string name="app_catalog_create_book">Добавить книгу</string>
+    <string name="app_book_edit_title">Заголовок</string>
+    <string name="app_book_edit_author">Автор</string>
+    <string name="app_book_edit_image">Изображение</string>
+    <string name="app_book_edit_description">Описание</string>
+    <string name="app_book_edit_save">Сохранить</string>
+    <string name="app_book_edit_delete">Удалить</string>
+    <string name="app_book_edit_fill_all">Необходимо заполнить все поля</string>
 </resources>

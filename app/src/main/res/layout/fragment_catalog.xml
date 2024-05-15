@@ -39,4 +39,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchFieldLayout" />
 
+    <Button
+        android:id="@+id/addBookButton"
+        style="@style/Base.Theme.HomeLibrary.DefaultButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:backgroundTint="@android:color/holo_green_dark"
+        android:text="@string/app_catalog_create_book"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

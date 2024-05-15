@@ -1,13 +1,10 @@
-package com.reindefox.homelibrary.server.model;
+package com.reindefox.homelibrary.server.service.book;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Book implements Serializable {
-    @SerializedName("id")
-    private Integer id;
-
+public class BookCreateRequest implements Serializable {
     @SerializedName("title")
     private String title;
 
@@ -19,14 +16,6 @@ public class Book implements Serializable {
 
     @SerializedName("description")
     private String description;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getTitle() {
         return title;

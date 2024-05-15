@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -19,6 +20,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.reindefox.homelibrary.R;
 import com.reindefox.homelibrary.activity.AbstractAuthActivity;
 import com.reindefox.homelibrary.auth.AuthorizationUtils;
+import com.reindefox.homelibrary.auth.Role;
 import com.reindefox.homelibrary.fragment.adapters.BookRecyclerViewAdapter;
 import com.reindefox.homelibrary.server.WebServerSingleton;
 import com.reindefox.homelibrary.server.model.Book;
@@ -72,6 +74,41 @@ public class CatalogFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
 
+        setupSearchFT(view);
+        setupAdminManager(view);
+
+        getAllBooks();
+
+        return view;
+    }
+
+    private void setupAdminManager(View view) {
+        if (sharedPreferences.getString(AbstractAuthActivity.ARG_USER_ROLE, "").equals(String.valueOf(Role.ADMIN))) {
+            Button button = view.findViewById(R.id.addBookButton);
+
+            button.setVisibility(View.VISIBLE);
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    BookEditFragment bookEditFragment = new BookEditFragment();
+
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean(BookEditFragment.IS_NEW_BOOK_CREATING, true);
+                    bookEditFragment.setArguments(bundle);
+
+                    getActivity()
+                            .getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.appLayout, bookEditFragment)
+                            .addToBackStack(null)
+                            .commit();
+                }
+            });
+        }
+    }
+
+    private void setupSearchFT(View view) {
         TextInputEditText textInputEditText = view.findViewById(R.id.searchField);
         textInputEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -87,10 +124,6 @@ public class CatalogFragment extends Fragment {
             public void afterTextChanged(Editable s) {
             }
         });
-
-        getAllBooks();
-
-        return view;
     }
 
     private void getAllBooks() {
