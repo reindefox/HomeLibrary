@@ -32,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
      */
     private ActivityMainBinding binding;
 
+    /**
+     * Синглтон для подключения к WS
+     */
     private WebServerSingleton webServer;
 
     /**

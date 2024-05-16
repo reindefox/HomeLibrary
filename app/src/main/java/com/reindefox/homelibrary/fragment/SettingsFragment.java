@@ -9,10 +9,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
 import com.reindefox.homelibrary.R;
+import com.reindefox.homelibrary.activity.AbstractAuthActivity;
 import com.reindefox.homelibrary.activity.MainActivity;
 import com.reindefox.homelibrary.auth.AuthorizationUtils;
 
@@ -30,6 +32,9 @@ public class SettingsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
         sharedPreferences = getContext().getSharedPreferences(AuthorizationUtils.PREFS_USER, Context.MODE_PRIVATE);
+
+        TextView textView = view.findViewById(R.id.signedUsername);
+        textView.setText(sharedPreferences.getString(AbstractAuthActivity.ARG_USER_LOGIN, null));
 
         Switch switchCompat = view.findViewById(R.id.keepLoginSwitch);
         switchCompat.setChecked(sharedPreferences.getBoolean(AuthorizationUtils.PREFS_AUTO_LOGIN, false));

@@ -88,7 +88,8 @@ public class AuthorizationActivity extends AbstractAuthActivity {
         binding.signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (binding.login.getText().toString().equals("") || binding.password.getText().toString().equals("")) {
+                if (binding.login.getText() == null || binding.password.getText() == null ||
+                        binding.login.getText().toString().isEmpty() || binding.password.getText().toString().isEmpty()) {
                     Snackbar.make(view, R.string.login_empty, Snackbar.LENGTH_SHORT)
                             .show();
 
@@ -135,6 +136,7 @@ public class AuthorizationActivity extends AbstractAuthActivity {
     protected void onResume() {
         super.onResume();
 
+        // Восстановление данных из SP
         binding.login.setText(sharedPreferences.getString(spLogin, null));
     }
 

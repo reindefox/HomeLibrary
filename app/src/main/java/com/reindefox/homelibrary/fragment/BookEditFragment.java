@@ -1,16 +1,24 @@
 package com.reindefox.homelibrary.fragment;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.reindefox.homelibrary.R;
@@ -19,10 +27,11 @@ import com.reindefox.homelibrary.auth.AuthorizationUtils;
 import com.reindefox.homelibrary.server.WebServerSingleton;
 import com.reindefox.homelibrary.server.model.Book;
 import com.reindefox.homelibrary.server.service.book.BookCreateRequest;
+import com.reindefox.homelibrary.server.service.book.BookDeleteRequest;
 import com.reindefox.homelibrary.server.service.book.BookService;
 
+import java.net.HttpURLConnection;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import retrofit2.Call;
@@ -32,6 +41,8 @@ import retrofit2.Response;
 public class BookEditFragment extends Fragment {
 
     public static final String IS_NEW_BOOK_CREATING = "new_book";
+
+    public static final String BOOK_DATA = "book_data";
 
     private BookService bookService;
 
@@ -47,9 +58,7 @@ public class BookEditFragment extends Fragment {
 
     private TextInputEditText description;
 
-    public static BookEditFragment newInstance(String param1, String param2) {
-        return new BookEditFragment();
-    }
+    private TextInputEditText content;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,6 +71,12 @@ public class BookEditFragment extends Fragment {
                 .getRetrofit()
                 .create(BookService.class);
 
+        title = view.findViewById(R.id.inputTitle);
+        author = view.findViewById(R.id.inputAuthor);
+        image = view.findViewById(R.id.inputImage);
+        description = view.findViewById(R.id.inputDescription);
+        content = view.findViewById(R.id.inputContent);
+
         Bundle bundle = getArguments();
         if (bundle != null) {
             if (bundle.getBoolean(IS_NEW_BOOK_CREATING)) {
@@ -70,6 +85,25 @@ public class BookEditFragment extends Fragment {
                 initBookEdit();
             }
         }
+
+        ImageView imageView = view.findViewById(R.id.bookPreviewImage);
+        image.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Glide
+                        .with(view)
+                        .load(s.toString())
+                        .into(imageView);
+            }
+        });
 
         return view;
     }
@@ -83,20 +117,7 @@ public class BookEditFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (verifyInputFields()) {
-                    BookCreateRequest book = prepareBook();
-
-                    bookService.create("Bearer " + sharedPreferences.getString(AbstractAuthActivity.ARG_AUTH_TOKEN_TYPE, ""), book)
-                            .enqueue(new Callback<Integer>() {
-                                @Override
-                                public void onResponse(Call<Integer> call, Response<Integer> response) {
-
-                                }
-
-                                @Override
-                                public void onFailure(Call<Integer> call, Throwable throwable) {
-
-                                }
-                            });
+                    createNewBook();
                 }
             }
         });
@@ -106,16 +127,60 @@ public class BookEditFragment extends Fragment {
      * Вызывается в случае изменения книги
      */
     private void initBookEdit() {
+        Book book = getArguments().getSerializable(BookEditFragment.BOOK_DATA, Book.class);
+
+        if (book == null) {
+            return;
+        }
+
         Button deleteButton = view.findViewById(R.id.deleteButton);
         deleteButton.setVisibility(View.VISIBLE);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteBook(book);
+            }
+        });
+
+        Button saveButton = view.findViewById(R.id.saveChangesButton);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateBook();
+            }
+        });
+
+        title.setText(book.getTitle());
+        author.setText(book.getAuthor());
+        image.setText(book.getImageUrl());
+        description.setText(book.getDescription());
+    }
+
+    private void updateBook() {
+
+    }
+
+    private Dialog createDeletedDialog(final String title) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        return builder
+                .setTitle(R.string.app_book_edit_deleted_info)
+                .setMessage(title)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO обновление контента
+                        getActivity()
+                                .getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.appLayout, CatalogFragment.newInstance())
+                                .commit();
+                    }
+                })
+                .create();
     }
 
     private boolean verifyInputFields() {
-        title = view.findViewById(R.id.inputTitle);
-        author = view.findViewById(R.id.inputAuthor);
-        image = view.findViewById(R.id.inputImage);
-        description = view.findViewById(R.id.inputDescription);
-
         AtomicBoolean flag = new AtomicBoolean(true);
 
         Arrays.asList(title, author, image).forEach(textInputEditText -> {
@@ -132,6 +197,67 @@ public class BookEditFragment extends Fragment {
         return flag.get();
     }
 
+    private void createNewBook() {
+        BookCreateRequest book = prepareBook();
+
+        bookService.create("Bearer " + sharedPreferences.getString(AbstractAuthActivity.ARG_AUTH_TOKEN_TYPE, ""), book)
+                .enqueue(new Callback<Integer>() {
+                    @Override
+                    public void onResponse(Call<Integer> call, Response<Integer> response) {
+                        if (response.code() == HttpURLConnection.HTTP_CREATED) {
+                            createAddedDialog(book.getTitle())
+                                    .show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Integer> call, Throwable throwable) {
+
+                    }
+                });
+    }
+
+    private void deleteBook(final Book book) {
+        BookDeleteRequest request = new BookDeleteRequest();
+
+        request.setId(book.getId());
+
+        bookService.delete("Bearer " + sharedPreferences.getString(AbstractAuthActivity.ARG_AUTH_TOKEN_TYPE, ""), request)
+                .enqueue(new Callback<Integer>() {
+                    @Override
+                    public void onResponse(Call<Integer> call, Response<Integer> response) {
+                        Log.i("123", String.valueOf(response.code()));
+                        if (response.code() == HttpURLConnection.HTTP_OK) {
+                            createDeletedDialog(book.getTitle())
+                                    .show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Integer> call, Throwable throwable) {
+                    }
+                });
+    }
+
+    private Dialog createAddedDialog(final String title) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        return builder
+                .setTitle(R.string.app_book_edit_created_info)
+                .setMessage(title)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO обновление контента
+                        getActivity()
+                                .getSupportFragmentManager()
+                                .popBackStack();
+                    }
+                })
+                .create();
+    }
+
+
     private BookCreateRequest prepareBook() {
         BookCreateRequest book = new BookCreateRequest();
 
@@ -139,6 +265,7 @@ public class BookEditFragment extends Fragment {
         book.setAuthor(author.getText().toString());
         book.setImageUrl(image.getText().toString());
         book.setDescription(description.getText().toString());
+        book.setContent(content.getText().toString());
 
         return book;
     }

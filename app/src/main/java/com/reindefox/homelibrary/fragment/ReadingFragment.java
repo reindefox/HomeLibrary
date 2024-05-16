@@ -45,23 +45,6 @@ public class ReadingFragment extends Fragment {
 
         sharedPreferences = getContext().getSharedPreferences(AuthorizationUtils.PREFS_USER, Context.MODE_PRIVATE);
 
-        getAllByUser();
-
         return view;
-    }
-
-    private void getAllByUser() {
-        bookService.getAllByUser("Bearer " + sharedPreferences.getString(AbstractAuthActivity.ARG_AUTH_TOKEN_TYPE, ""))
-                .enqueue(new Callback<Collection<Book>>() {
-                    @Override
-                    public void onResponse(Call<Collection<Book>> call, Response<Collection<Book>> response) {
-                        Log.i("123", String.valueOf(response.code()));
-                    }
-
-                    @Override
-                    public void onFailure(Call<Collection<Book>> call, Throwable throwable) {
-                        // TODO
-                    }
-                });
     }
 }

@@ -28,6 +28,7 @@
     <string name="app_nav_search">Поиск</string>
     <string name="app_book_favorite">В избранное</string>
     <string name="app_book_favorite_active">Уже в избранном</string>
+    <string name="app_book_edit">Редактировать</string>
     <string name="app_settings_user">Пользователь</string>
     <string name="app_settings_keep_login">Автоматическая авторизация</string>
     <string name="app_settings_logout">Выйти из аккаунта</string>
@@ -36,7 +37,10 @@
     <string name="app_book_edit_author">Автор</string>
     <string name="app_book_edit_image">Изображение</string>
     <string name="app_book_edit_description">Описание</string>
+    <string name="app_book_edit_content">Содержание</string>
     <string name="app_book_edit_save">Сохранить</string>
     <string name="app_book_edit_delete">Удалить</string>
     <string name="app_book_edit_fill_all">Необходимо заполнить все поля</string>
+    <string name="app_book_edit_created_info">Книга добавлена</string>
+    <string name="app_book_edit_deleted_info">Книга удалена</string>
 </resources>

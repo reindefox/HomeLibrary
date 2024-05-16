@@ -126,7 +126,7 @@ public class SignUpActivity extends AbstractAuthActivity {
 
                         break;
                     }
-                    case HttpURLConnection.HTTP_OK: {
+                    case HttpURLConnection.HTTP_CREATED: {
                         Snackbar.make(binding.getRoot().getRootView(), getString(R.string.login_signup_created), Snackbar.LENGTH_SHORT)
                                 .show();
 

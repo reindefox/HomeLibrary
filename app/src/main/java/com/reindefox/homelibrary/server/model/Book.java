@@ -20,6 +20,9 @@ public class Book implements Serializable {
     @SerializedName("description")
     private String description;
 
+    @SerializedName("content")
+    private String content;
+
     public int getId() {
         return id;
     }
@@ -58,5 +61,13 @@ public class Book implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

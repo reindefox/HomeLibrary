@@ -1,10 +1,12 @@
 package com.reindefox.homelibrary.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,6 +105,8 @@ public class CatalogFragment extends Fragment {
                             .replace(R.id.appLayout, bookEditFragment)
                             .addToBackStack(null)
                             .commit();
+
+                    // TODO добавить в books книгу или обновить список
                 }
             });
         }
@@ -140,7 +144,6 @@ public class CatalogFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<Collection<Book>> call, Throwable throwable) {
-                        // TODO
                     }
                 });
     }

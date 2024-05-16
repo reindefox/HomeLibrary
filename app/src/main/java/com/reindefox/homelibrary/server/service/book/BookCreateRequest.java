@@ -17,6 +17,9 @@ public class BookCreateRequest implements Serializable {
     @SerializedName("description")
     private String description;
 
+    @SerializedName("content")
+    private String content;
+
     public String getTitle() {
         return title;
     }
@@ -47,5 +50,13 @@ public class BookCreateRequest implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }
