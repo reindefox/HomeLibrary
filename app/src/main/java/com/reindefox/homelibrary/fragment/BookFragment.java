@@ -112,6 +112,9 @@ public class BookFragment extends Fragment {
         }
     }
 
+    /**
+     * Проверка наличия книги в избранном у пользователя
+     */
     private void verifyBookUserConnection() {
         bookService.checkUserReading("Bearer " + sharedPreferences.getString(AbstractAuthActivity.ARG_AUTH_TOKEN_TYPE, ""), book.getId())
                 .enqueue(new Callback<Void>() {
@@ -127,6 +130,9 @@ public class BookFragment extends Fragment {
                 });
     }
 
+    /**
+     * Запуск фрагмента редактирования книги
+     */
     private void editBookOpenFragment() {
         BookEditFragment bookEditFragment = new BookEditFragment();
 
@@ -144,6 +150,9 @@ public class BookFragment extends Fragment {
                 .commit();
     }
 
+    /**
+     * Получение информации о книге из полученных аргументов
+     */
     private void setBookData() {
         Bundle bundle = getArguments();
 
@@ -173,6 +182,10 @@ public class BookFragment extends Fragment {
         descView.setText(book.getDescription());
     }
 
+    /**
+     * Обновление состояния добавления книги в избранное пользователем
+     * @param state состояние
+     */
     private void updateReadingState(boolean state) {
         BookReadingRequest request = new BookReadingRequest();
 
@@ -193,6 +206,10 @@ public class BookFragment extends Fragment {
         setReadingState(state);
     }
 
+    /**
+     * Установить состояние для кнопки
+     * @param isFavorite состояние
+     */
     private void setReadingState(boolean isFavorite) {
         ToggleButton button = view.findViewById(R.id.toggleButton);
 

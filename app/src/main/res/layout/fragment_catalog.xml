@@ -10,7 +10,10 @@
         android:id="@+id/searchFieldLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
+        android:paddingLeft="20dp"
+        android:paddingTop="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -18,14 +21,25 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/searchField"
             android:layout_width="match_parent"
-            android:singleLine="true"
             android:layout_height="40dp"
             android:drawableStart="@drawable/search_24dp_fill0_wght400_grad0_opsz24"
             android:drawableTint="#80000000"
             android:hint="@string/app_nav_search"
-            android:padding="0dp" />
+            android:padding="0dp"
+            android:singleLine="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <CheckBox
+        android:id="@+id/favoriteOnlyCheckBox"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="@string/app_catalog_favorite_only"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchFieldLayout" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -37,7 +51,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchFieldLayout" />
+        app:layout_constraintTop_toBottomOf="@id/favoriteOnlyCheckBox" />
 
     <Button
         android:id="@+id/addBookButton"

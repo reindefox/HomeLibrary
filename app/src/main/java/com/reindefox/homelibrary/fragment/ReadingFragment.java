@@ -59,6 +59,10 @@ public class ReadingFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Создать разметку для предпросмотра содержимого книги
+     * @param text содержимое
+     */
     private void createMarkdown(final String text) {
         final Markwon markwon = Markwon.create(getContext());
 
