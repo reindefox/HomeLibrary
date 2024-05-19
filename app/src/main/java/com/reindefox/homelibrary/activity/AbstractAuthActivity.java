@@ -8,6 +8,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.reindefox.homelibrary.server.WebServerSingleton;
 import com.reindefox.homelibrary.server.service.authorization.AuthorizationService;
 
+/**
+ * Абстрактный класс для авторизации и регистрации
+ */
 public abstract class AbstractAuthActivity extends AppCompatActivity {
     public static final String ARG_AUTH_TOKEN_TYPE = "token";
 

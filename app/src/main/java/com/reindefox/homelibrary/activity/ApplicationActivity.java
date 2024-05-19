@@ -4,20 +4,18 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
 import com.google.android.material.navigation.NavigationBarView;
 import com.reindefox.homelibrary.R;
 import com.reindefox.homelibrary.databinding.ActivityApplicationBinding;
-import com.reindefox.homelibrary.fragment.CatalogFragment;
 import com.reindefox.homelibrary.fragment.AbstractFragmentDependent;
+import com.reindefox.homelibrary.fragment.CatalogFragment;
 import com.reindefox.homelibrary.fragment.ReadingFragment;
 import com.reindefox.homelibrary.fragment.SettingsFragment;
 
 /**
- * Основной интерфейс приложения
+ * Основная активность приложения
  */
 public class ApplicationActivity extends AbstractFragmentDependent {
 
@@ -58,12 +56,11 @@ public class ApplicationActivity extends AbstractFragmentDependent {
         });
     }
 
-    private void initializeBasicFragment() {
-        replaceFragment(R.id.appLayout, CatalogFragment.newInstance());
+    public ActivityApplicationBinding getBinding() {
+        return binding;
     }
 
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
+    private void initializeBasicFragment() {
+        replaceFragment(R.id.appLayout, CatalogFragment.newInstance());
     }
 }

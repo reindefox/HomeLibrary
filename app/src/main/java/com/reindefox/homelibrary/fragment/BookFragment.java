@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import androidx.fragment.app.Fragment;
 
@@ -18,18 +18,21 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 import com.reindefox.homelibrary.R;
 import com.reindefox.homelibrary.activity.AbstractAuthActivity;
+import com.reindefox.homelibrary.activity.ApplicationActivity;
 import com.reindefox.homelibrary.auth.AuthorizationUtils;
 import com.reindefox.homelibrary.auth.Role;
 import com.reindefox.homelibrary.server.WebServerSingleton;
 import com.reindefox.homelibrary.server.model.Book;
+import com.reindefox.homelibrary.server.service.book.BookReadingRequest;
 import com.reindefox.homelibrary.server.service.book.BookService;
 
-import java.util.Collection;
+import java.net.HttpURLConnection;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// TODO сначала загрузка, потом рендер
 public class BookFragment extends Fragment {
 
     public static final String bundleName = "book";
@@ -65,6 +68,32 @@ public class BookFragment extends Fragment {
         // Проверяем связь между юзером и книгой
         verifyBookUserConnection();
 
+        ToggleButton favButton = view.findViewById(R.id.toggleButton);
+        favButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateReadingState(favButton.isChecked());
+            }
+        });
+
+        Button previewButton = view.findViewById(R.id.previewButton);
+        previewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getActivity() instanceof ApplicationActivity) {
+                    ApplicationActivity activity = (ApplicationActivity) getActivity();
+                    activity.getBinding().bottomNavigationView.setSelectedItemId(R.id.reading);
+
+                    ReadingFragment readingFragment = new ReadingFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(bundleName, book);
+                    readingFragment.setArguments(bundle);
+
+                    activity.replaceFragment(R.id.appLayout, readingFragment);
+                }
+            }
+        });
+
         return view;
     }
 
@@ -85,14 +114,15 @@ public class BookFragment extends Fragment {
 
     private void verifyBookUserConnection() {
         bookService.checkUserReading("Bearer " + sharedPreferences.getString(AbstractAuthActivity.ARG_AUTH_TOKEN_TYPE, ""), book.getId())
-                .enqueue(new Callback<Collection<Book>>() {
+                .enqueue(new Callback<Void>() {
                     @Override
-                    public void onResponse(Call<Collection<Book>> call, Response<Collection<Book>> response) {
-
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        // Статус OK, если у пользователя есть книга
+                        setReadingState(response.code() == HttpURLConnection.HTTP_OK);
                     }
 
                     @Override
-                    public void onFailure(Call<Collection<Book>> call, Throwable throwable) {
+                    public void onFailure(Call<Void> call, Throwable throwable) {
                     }
                 });
     }
@@ -119,7 +149,7 @@ public class BookFragment extends Fragment {
 
         assert bundle != null;
         book = bundle.getSerializable(bundleName, Book.class);
-        
+
         if (book == null) {
             Snackbar.make(view, R.string.error, Snackbar.LENGTH_SHORT)
                     .show();
@@ -141,5 +171,31 @@ public class BookFragment extends Fragment {
 
         TextView descView = view.findViewById(R.id.descriptionText);
         descView.setText(book.getDescription());
+    }
+
+    private void updateReadingState(boolean state) {
+        BookReadingRequest request = new BookReadingRequest();
+
+        request.setBookId(book.getId());
+        request.setState(state);
+
+        bookService.updateReadingState("Bearer " + sharedPreferences.getString(AbstractAuthActivity.ARG_AUTH_TOKEN_TYPE, ""), request)
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable throwable) {
+                    }
+                });
+
+        setReadingState(state);
+    }
+
+    private void setReadingState(boolean isFavorite) {
+        ToggleButton button = view.findViewById(R.id.toggleButton);
+
+        button.setChecked(isFavorite);
     }
 }

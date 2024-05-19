@@ -109,6 +109,11 @@ public class SignUpActivity extends AbstractAuthActivity {
         });
     }
 
+    /**
+     * Регистрация пользователя в системе
+     * @param login логин
+     * @param password пароль
+     */
     private void signUp(String login, String password) {
         String passwordHash = AuthorizationUtils.applySHA256(binding.password.getText().toString());
 

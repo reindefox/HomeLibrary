@@ -13,7 +13,6 @@ import android.text.TextPaint;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -174,6 +173,9 @@ public class AuthorizationActivity extends AbstractAuthActivity {
         startActivity(intent);
     }
 
+    /**
+     * Переадресация на приложение после авторизации
+     */
     private void redirectToApplication() {
         Intent intent = new Intent(this, ApplicationActivity.class);
 
@@ -182,6 +184,9 @@ public class AuthorizationActivity extends AbstractAuthActivity {
         finish();
     }
 
+    /**
+     * Вызвать запрос на авторизацию пользователя
+     */
     private void attemptLoginUser() {
         assert binding.login.getText() != null;
         assert binding.password.getText() != null;
@@ -237,6 +242,10 @@ public class AuthorizationActivity extends AbstractAuthActivity {
         });
     }
 
+    /**
+     * Установить блокировку полей и кнопки для авторизации
+     * @param flag заблокировать
+     */
     private void setDataInputWhenLoading(boolean flag) {
         binding.signInButton.setEnabled(flag);
         binding.login.setEnabled(flag);

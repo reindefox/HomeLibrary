@@ -38,15 +38,37 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titleBook" />
 
-    <Button
-        android:id="@+id/favouriteButton"
-        style="@style/Base.Theme.HomeLibrary.FavoriteButton"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linear"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/descriptionText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/authorBook" />
+        app:layout_constraintTop_toBottomOf="@id/authorBook">
+
+        <ToggleButton
+            android:id="@+id/toggleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/bgColorGrey"
+            android:drawableLeft="@drawable/favorite_24dp_fill0_wght400_grad0_opsz24"
+            android:drawablePadding="6dp"
+            android:text="ToggleButton"
+            android:textOff="@string/app_book_favorite"
+            android:textOn="@string/app_book_favorite_active"
+            android:theme="@style/Base.Theme.HomeLibrary.FavoriteButton" />
+
+        <Button
+            android:id="@+id/previewButton"
+            style="@style/Base.Theme.HomeLibrary.DefaultButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_book_read"
+            app:cornerRadius="0dp" />
+    </LinearLayout>
 
     <View
         android:id="@+id/divider4"
@@ -58,7 +80,7 @@
         android:background="?android:attr/listDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/favouriteButton" />
+        app:layout_constraintTop_toBottomOf="@id/linear" />
 
     <TextView
         android:id="@+id/descriptionText"

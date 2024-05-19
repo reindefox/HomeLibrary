@@ -3,7 +3,6 @@ package com.reindefox.homelibrary.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
@@ -100,6 +99,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Показывает текст, если не удалось установить подключение к серверу
+     */
     private void throwConnectionUIError() {
         Glide.with(binding.getRoot().getRootView())
                 .load(R.drawable.baseline_error_outline_24)

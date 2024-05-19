@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Домашняя библиотека</string>
     <string name="loading">Загрузка...</string>
-    <string name="loading_db_fail">Ошибка при подключении к БД</string>
+    <string name="loading_db_fail">Ошибка при подключении к серверу</string>
     <string name="login_text">Авторизация</string>
     <string name="login_test_account">📇 Тестовый аккаунт</string>
     <string name="login_login">Логин</string>
@@ -23,11 +23,12 @@
     <string name="login_signup_login_conflict">Пользователем с таким логином уже есть</string>
     <string name="login_signup_created">Пользователем создан</string>
     <string name="app_nav_bottom_book_list">Каталог</string>
-    <string name="app_nav_bottom_book_reading">Читаю</string>
+    <string name="app_nav_bottom_book_reading">Предпросмотр</string>
     <string name="app_nav_bottom_book_settings">Настройки</string>
     <string name="app_nav_search">Поиск</string>
     <string name="app_book_favorite">В избранное</string>
-    <string name="app_book_favorite_active">Уже в избранном</string>
+    <string name="app_book_read">Предпросмотр</string>
+    <string name="app_book_favorite_active">Убрать из избранных</string>
     <string name="app_book_edit">Редактировать</string>
     <string name="app_settings_user">Пользователь</string>
     <string name="app_settings_keep_login">Автоматическая авторизация</string>
@@ -43,4 +44,6 @@
     <string name="app_book_edit_fill_all">Необходимо заполнить все поля</string>
     <string name="app_book_edit_created_info">Книга добавлена</string>
     <string name="app_book_edit_deleted_info">Книга удалена</string>
+    <string name="app_book_edit_updated_info">Книга обновлена</string>
+    <string name="app_book_reading_select">Выберите книгу в каталоге для предпросмотра</string>
 </resources>

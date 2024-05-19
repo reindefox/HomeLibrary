@@ -2,6 +2,7 @@
 <resources>
     <color name="bgColor">#FFFFFF</color>
     <color name="bgColorGrey">#FAFAFA</color>
+    <color name="holo_red_light">#FF4444</color>
     <color name="grey">#343434</color>
     <color name="text_help">#AFAFAF</color>
     <color name="light_blue_400">#FF29B6F6</color>

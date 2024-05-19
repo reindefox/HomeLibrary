@@ -22,6 +22,8 @@ public abstract class AbstractFragmentDependent extends AppCompatActivity {
 
     protected void replaceFragment(@IdRes int containerViewId, Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
+        // Полностью очищаем стек фрагментов
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(containerViewId, fragment);
         fragmentTransaction.commit();

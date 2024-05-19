@@ -13,6 +13,11 @@ public class AuthorizationUtils {
      */
     public static final int MAX_USER_DATA_LENGTH = 32;
 
+    /**
+     * Применение алгоритма для шифрования пароля
+     * @param password исходный пароль
+     * @return зашифрованный пароль
+     */
     public static String applySHA256(String password) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
