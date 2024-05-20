@@ -1,4 +1,4 @@
-package com.reindefox.homelibrary.fragment.adapters;
+package com.reindefox.homelibrary.fragment.adapter;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

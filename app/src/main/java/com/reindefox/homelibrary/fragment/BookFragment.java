@@ -21,6 +21,7 @@ import com.reindefox.homelibrary.activity.AbstractAuthActivity;
 import com.reindefox.homelibrary.activity.ApplicationActivity;
 import com.reindefox.homelibrary.auth.AuthorizationUtils;
 import com.reindefox.homelibrary.auth.Role;
+import com.reindefox.homelibrary.fragment.component.LoadingDialog;
 import com.reindefox.homelibrary.server.WebServerSingleton;
 import com.reindefox.homelibrary.server.model.Book;
 import com.reindefox.homelibrary.server.service.book.BookReadingRequest;
@@ -45,10 +46,14 @@ public class BookFragment extends Fragment {
 
     private Book book;
 
+    private LoadingDialog loadingDialog;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_book, container, false);
+
+        loadingDialog = new LoadingDialog(this.getContext(), true);
 
         TextView descView = view.findViewById(R.id.descriptionText);
         descView.setMovementMethod(new ScrollingMovementMethod());
@@ -122,6 +127,7 @@ public class BookFragment extends Fragment {
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         // Статус OK, если у пользователя есть книга
                         setReadingState(response.code() == HttpURLConnection.HTTP_OK);
+                        loadingDialog.stopLoading();
                     }
 
                     @Override
