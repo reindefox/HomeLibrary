@@ -33,7 +33,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-// TODO сначала загрузка, потом рендер
 public class BookFragment extends Fragment {
 
     public static final String bundleName = "book";
