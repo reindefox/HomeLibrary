@@ -1,13 +1,18 @@
 package com.reindefox.homelibrary.fragment;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -21,6 +26,8 @@ import com.reindefox.homelibrary.auth.AuthorizationUtils;
 public class SettingsFragment extends Fragment {
 
     private SharedPreferences sharedPreferences;
+
+    private WebView webView;
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
@@ -55,6 +62,28 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+        Button helpButton = view.findViewById(R.id.helpButton);
+        helpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WebView webview = new WebView(getActivity());
+                webview.getSettings().setJavaScriptEnabled(true);
+                webview.loadUrl("file:///android_asset/help.html");
+
+                RelativeLayout.LayoutParams paramsWebView = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                Dialog dialog = new Dialog(getActivity(), android.R.style.Theme_DeviceDefault_Dialog_NoActionBar);
+                dialog.addContentView(webview, paramsWebView);
+                dialog.show();
+            }
+        });
+
         return view;
+    }
+
+    private class HelpWebView extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            return false;
+        }
     }
 }
