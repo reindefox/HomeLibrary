@@ -92,11 +92,4 @@ public class SettingsFragment extends Fragment {
 
         return view;
     }
-
-    private class HelpWebView extends WebViewClient {
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-            return false;
-        }
-    }
 }
