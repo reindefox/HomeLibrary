@@ -1,9 +1,8 @@
 package com.reindefox.homelibrary.activity;
 
-import static com.reindefox.homelibrary.auth.AuthorizationUtils.MAX_USER_DATA_LENGTH;
-
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 
@@ -11,6 +10,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.reindefox.homelibrary.R;
 import com.reindefox.homelibrary.auth.AuthorizationUtils;
 import com.reindefox.homelibrary.databinding.ActivitySignUpBinding;
+import com.reindefox.homelibrary.filter.RegexInputFilter;
 import com.reindefox.homelibrary.server.service.authorization.AuthorizationDataRequest;
 import com.reindefox.homelibrary.server.service.authorization.SignInResponse;
 
@@ -33,11 +33,7 @@ public class SignUpActivity extends AbstractAuthActivity {
     /**
      * Разрешить регистрацию без принятия соглашения
      */
-    private static boolean ENABLE_WITHOUT_EULA = false;
-
-    private SharedPreferences sharedPreferences;
-
-    private SharedPreferences.Editor editor;
+    private static final boolean ENABLE_WITHOUT_EULA = false;
 
     /**
      * Базовая инициализация компонента
@@ -55,11 +51,18 @@ public class SignUpActivity extends AbstractAuthActivity {
 
         binding.signUpButton.setEnabled(ENABLE_WITHOUT_EULA);
 
-        binding.checkBoxEULA.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                binding.signUpButton.setEnabled(isChecked);
-            }
+        binding.checkBoxEULA.setOnCheckedChangeListener((buttonView, isChecked) -> binding.signUpButton.setEnabled(isChecked));
+
+        binding.login.setFilters(new InputFilter[]{
+                new RegexInputFilter(ALLOWED_LOGIN_CHARS),
+        });
+
+        binding.password.setFilters(new InputFilter[]{
+                new RegexInputFilter(ALLOWED_PWD_CHARS),
+        });
+
+        binding.repeatPassword.setFilters(new InputFilter[]{
+                new RegexInputFilter(ALLOWED_PWD_CHARS),
         });
 
         binding.signUpButton.setOnClickListener(new View.OnClickListener() {
@@ -142,7 +145,7 @@ public class SignUpActivity extends AbstractAuthActivity {
 
             @Override
             public void onFailure(Call<SignInResponse> call, Throwable throwable) {
-
+                Log.e(this.getClass().getSimpleName(), throwable.toString());
             }
         });
     }

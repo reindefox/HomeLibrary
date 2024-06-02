@@ -48,6 +48,7 @@ public class BookRecyclerViewAdapter extends RecyclerView.Adapter<BookRecyclerVi
         Glide
                 .with(this.context)
                 .load(book.getImageUrl())
+                .error(R.drawable.imagesmode_24dp_fill0_wght400_grad0_opsz24)
                 .into(holder.coverImage);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -59,7 +60,7 @@ public class BookRecyclerViewAdapter extends RecyclerView.Adapter<BookRecyclerVi
                     BookFragment bookFragment = new BookFragment();
 
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable(BookFragment.bundleName, book);
+                    bundle.putSerializable(BookFragment.BUNDLE_NAME, book);
                     bookFragment.setArguments(bundle);
 
                     context.getSupportFragmentManager()

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +36,7 @@ import retrofit2.Response;
 
 public class BookFragment extends Fragment {
 
-    public static final String bundleName = "book";
+    public static final String BUNDLE_NAME = "book";
 
     private SharedPreferences sharedPreferences;
 
@@ -90,7 +91,7 @@ public class BookFragment extends Fragment {
 
                     ReadingFragment readingFragment = new ReadingFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable(bundleName, book);
+                    bundle.putSerializable(BUNDLE_NAME, book);
                     readingFragment.setArguments(bundle);
 
                     activity.replaceFragment(R.id.appLayout, readingFragment);
@@ -131,6 +132,7 @@ public class BookFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable throwable) {
+                        Log.e(this.getClass().getSimpleName(), throwable.toString());
                     }
                 });
     }
@@ -161,8 +163,10 @@ public class BookFragment extends Fragment {
     private void setBookData() {
         Bundle bundle = getArguments();
 
-        assert bundle != null;
-        book = bundle.getSerializable(bundleName, Book.class);
+        if (bundle == null)
+            return;
+
+        book = bundle.getSerializable(BUNDLE_NAME, Book.class);
 
         if (book == null) {
             Snackbar.make(view, R.string.error, Snackbar.LENGTH_SHORT)
@@ -175,6 +179,7 @@ public class BookFragment extends Fragment {
         Glide
                 .with(view)
                 .load(book.getImageUrl())
+                .error(R.drawable.imagesmode_24dp_fill0_wght400_grad0_opsz24)
                 .into(imageView);
 
         TextView titleView = view.findViewById(R.id.titleBook);
@@ -205,6 +210,7 @@ public class BookFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable throwable) {
+                        Log.e(this.getClass().getSimpleName(), throwable.toString());
                     }
                 });
 

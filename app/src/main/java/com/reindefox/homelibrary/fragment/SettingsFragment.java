@@ -3,6 +3,8 @@ package com.reindefox.homelibrary.fragment;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +18,16 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.reindefox.homelibrary.R;
 import com.reindefox.homelibrary.activity.AbstractAuthActivity;
 import com.reindefox.homelibrary.activity.MainActivity;
 import com.reindefox.homelibrary.auth.AuthorizationUtils;
+import com.reindefox.homelibrary.auth.Role;
+
+import java.util.Arrays;
 
 public class SettingsFragment extends Fragment {
 
@@ -41,7 +47,14 @@ public class SettingsFragment extends Fragment {
         sharedPreferences = getContext().getSharedPreferences(AuthorizationUtils.PREFS_USER, Context.MODE_PRIVATE);
 
         TextView textView = view.findViewById(R.id.signedUsername);
-        textView.setText(sharedPreferences.getString(AbstractAuthActivity.ARG_USER_LOGIN, null));
+        textView.setText(String.format(getString(R.string.app_settings_user), sharedPreferences.getString(AbstractAuthActivity.ARG_USER_LOGIN, null)));
+
+        if (sharedPreferences.getString(AbstractAuthActivity.ARG_USER_ROLE, "").equals(String.valueOf(Role.ADMIN))) {
+            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.admin_panel_settings_24dp_fill0_wght400_grad0_opsz24, 0, 0, 0);
+            Arrays.stream(textView.getCompoundDrawables()).findFirst().get()
+                    .setColorFilter(new PorterDuffColorFilter(ContextCompat.getColor(textView.getContext(),
+                            android.R.color.holo_orange_light), PorterDuff.Mode.SRC_IN));
+        }
 
         Switch switchCompat = view.findViewById(R.id.keepLoginSwitch);
         switchCompat.setChecked(sharedPreferences.getBoolean(AuthorizationUtils.PREFS_AUTO_LOGIN, false));

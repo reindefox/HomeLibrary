@@ -13,7 +13,9 @@ import android.text.TextPaint;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 
 import androidx.annotation.NonNull;
 
@@ -21,6 +23,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.reindefox.homelibrary.R;
 import com.reindefox.homelibrary.auth.AuthorizationUtils;
 import com.reindefox.homelibrary.databinding.ActivityAuthorizationBinding;
+import com.reindefox.homelibrary.filter.RegexInputFilter;
 import com.reindefox.homelibrary.server.service.authorization.AuthorizationDataRequest;
 import com.reindefox.homelibrary.server.service.authorization.SignInResponse;
 
@@ -44,7 +47,9 @@ public class AuthorizationActivity extends AbstractAuthActivity {
 
     private SharedPreferences.Editor editor;
 
-    public static final String spLogin = "login_cache";
+    public static final String SP_LOGIN = "login_cache";
+
+    private View view;
 
     /**
      * Базовая инициализация компонента
@@ -57,7 +62,7 @@ public class AuthorizationActivity extends AbstractAuthActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityAuthorizationBinding.inflate(getLayoutInflater());
-        View view = binding.getRoot();
+        view = binding.getRoot();
         setContentView(view);
 
         sharedPreferences = getSharedPreferences(AuthorizationUtils.PREFS_USER, Context.MODE_PRIVATE);
@@ -75,7 +80,7 @@ public class AuthorizationActivity extends AbstractAuthActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                editor.putString(spLogin, s.toString());
+                editor.putString(SP_LOGIN, s.toString());
                 editor.apply();
             }
 
@@ -84,29 +89,12 @@ public class AuthorizationActivity extends AbstractAuthActivity {
             }
         });
 
-        binding.signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (binding.login.getText() == null || binding.password.getText() == null ||
-                        binding.login.getText().toString().isEmpty() || binding.password.getText().toString().isEmpty()) {
-                    Snackbar.make(view, R.string.login_empty, Snackbar.LENGTH_SHORT)
-                            .show();
+        binding.signInButton.setOnClickListener(v -> attemptLoginUser());
 
-                    return;
-                }
-
+        binding.password.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE)
                 attemptLoginUser();
-            }
-        });
-
-        binding.testAccountButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                binding.login.setText("qq");
-                binding.password.setText("qq");
-
-                attemptLoginUser();
-            }
+            return true;
         });
 
         // Автоматическая авторизация при сохраненных параметрах
@@ -123,11 +111,13 @@ public class AuthorizationActivity extends AbstractAuthActivity {
      */
     private void setupFieldLimitations() {
         binding.login.setFilters(new InputFilter[]{
-                new InputFilter.LengthFilter(AuthorizationUtils.MAX_USER_DATA_LENGTH)
+                new InputFilter.LengthFilter(MAX_USER_DATA_LENGTH),
+                new RegexInputFilter(ALLOWED_LOGIN_CHARS)
         });
 
         binding.password.setFilters(new InputFilter[]{
-                new InputFilter.LengthFilter(AuthorizationUtils.MAX_USER_DATA_LENGTH)
+                new InputFilter.LengthFilter(MAX_USER_DATA_LENGTH),
+                new RegexInputFilter(ALLOWED_PWD_CHARS)
         });
     }
 
@@ -136,7 +126,7 @@ public class AuthorizationActivity extends AbstractAuthActivity {
         super.onResume();
 
         // Восстановление данных из SP
-        binding.login.setText(sharedPreferences.getString(spLogin, null));
+        binding.login.setText(sharedPreferences.getString(SP_LOGIN, null));
     }
 
     /**
@@ -188,8 +178,13 @@ public class AuthorizationActivity extends AbstractAuthActivity {
      * Вызвать запрос на авторизацию пользователя
      */
     private void attemptLoginUser() {
-        assert binding.login.getText() != null;
-        assert binding.password.getText() != null;
+        if (binding.login.getText() == null || binding.password.getText() == null ||
+                binding.login.getText().toString().isEmpty() || binding.password.getText().toString().isEmpty()) {
+            Snackbar.make(view, R.string.login_empty, Snackbar.LENGTH_SHORT)
+                    .show();
+
+            return;
+        }
 
         String login = binding.login.getText().toString();
 
@@ -236,6 +231,8 @@ public class AuthorizationActivity extends AbstractAuthActivity {
             public void onFailure(Call<SignInResponse> call, Throwable throwable) {
                 setDataInputWhenLoading(true);
 
+                Log.e(this.getClass().getSimpleName(), throwable.toString());
+
                 Snackbar.make(AuthorizationActivity.this.getWindow().getDecorView(), R.string.error, Snackbar.LENGTH_SHORT)
                         .show();
             }
@@ -244,6 +241,7 @@ public class AuthorizationActivity extends AbstractAuthActivity {
 
     /**
      * Установить блокировку полей и кнопки для авторизации
+     *
      * @param flag заблокировать
      */
     private void setDataInputWhenLoading(boolean flag) {

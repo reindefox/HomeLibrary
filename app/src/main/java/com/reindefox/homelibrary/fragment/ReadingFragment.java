@@ -45,7 +45,7 @@ public class ReadingFragment extends Fragment {
         TextView textView = view.findViewById(R.id.contentField);
 
         Bundle bundle = getArguments();
-        if (bundle == null || bundle.getSerializable(BookFragment.bundleName, Book.class) == null) {
+        if (bundle == null || bundle.getSerializable(BookFragment.BUNDLE_NAME, Book.class) == null) {
             createMarkdown("**Выберите книгу в каталоге для предпросмотра**");
             ImageView imageView = view.findViewById(R.id.bookPointerImage);
             imageView.setVisibility(View.VISIBLE);
@@ -53,7 +53,7 @@ public class ReadingFragment extends Fragment {
             return view;
         }
 
-        Book book = bundle.getSerializable(BookFragment.bundleName, Book.class);
+        Book book = bundle.getSerializable(BookFragment.BUNDLE_NAME, Book.class);
         createMarkdown(book.getContent());
 
         return view;

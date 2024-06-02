@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -50,13 +51,14 @@ public class MainActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
+        Log.i(this.getClass().getSimpleName(), "Application started");
+
         // Запуск анимации загрузки
         Glide.with(view)
                 .load(R.drawable.fox_loading)
                 .into(binding.foxLoading);
 
         webServer = WebServerSingleton.getInstance();
-
         createWebServerConnection();
     }
 
@@ -75,12 +77,14 @@ public class MainActivity extends AppCompatActivity {
                     // Переадресуем на авторизацию
                     initializeAuthorizationActivity(MainActivity.this);
                 } else {
+                    Log.e(this.getClass().getSimpleName(), "Failed to connect to server");
                     throwConnectionUIError();
                 }
             }
 
             @Override
             public void onFailure(Call<TestConnectionData> call, Throwable throwable) {
+                Log.e(this.getClass().getSimpleName(), throwable.toString());
                 throwConnectionUIError();
             }
         });

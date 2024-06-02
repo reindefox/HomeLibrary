@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,6 +99,7 @@ public class BookEditFragment extends Fragment {
                 Glide
                         .with(view)
                         .load(s.toString())
+                        .error(R.drawable.imagesmode_24dp_fill0_wght400_grad0_opsz24)
                         .into(imageView);
             }
         });
@@ -169,7 +171,7 @@ public class BookEditFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<Integer> call, Throwable throwable) {
-
+                        Log.e(this.getClass().getSimpleName(), throwable.toString());
                     }
                 });
     }
@@ -206,7 +208,7 @@ public class BookEditFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<Integer> call, Throwable throwable) {
-
+                        Log.e(this.getClass().getSimpleName(), throwable.toString());
                     }
                 });
     }
@@ -228,6 +230,7 @@ public class BookEditFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<Integer> call, Throwable throwable) {
+                        Log.e(this.getClass().getSimpleName(), throwable.toString());
                     }
                 });
     }

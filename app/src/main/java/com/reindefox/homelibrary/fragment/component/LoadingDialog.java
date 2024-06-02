@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 
 import com.reindefox.homelibrary.R;
@@ -15,7 +14,7 @@ public class LoadingDialog extends AlertDialog {
 
     private AlertDialog dialog;
 
-    private boolean alreadyLoading = false;
+    private boolean isLoading = false;
 
     public LoadingDialog(Context context) {
         super(context);
@@ -49,18 +48,18 @@ public class LoadingDialog extends AlertDialog {
     }
 
     public void startLoading() {
-        if (alreadyLoading)
+        if (isLoading)
             return;
 
         dialog.show();
 
-        alreadyLoading = true;
+        isLoading = true;
     }
 
     public void stopLoading() {
-        if (alreadyLoading)
+        if (isLoading)
             dialog.dismiss();
 
-        alreadyLoading = false;
+        isLoading = false;
     }
 }

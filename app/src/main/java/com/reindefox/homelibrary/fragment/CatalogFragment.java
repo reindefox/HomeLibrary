@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,6 @@ import com.reindefox.homelibrary.activity.AbstractAuthActivity;
 import com.reindefox.homelibrary.auth.AuthorizationUtils;
 import com.reindefox.homelibrary.auth.Role;
 import com.reindefox.homelibrary.fragment.adapter.BookRecyclerViewAdapter;
-import com.reindefox.homelibrary.fragment.component.LoadingDialog;
 import com.reindefox.homelibrary.server.WebServerSingleton;
 import com.reindefox.homelibrary.server.model.Book;
 import com.reindefox.homelibrary.server.service.book.BookService;
@@ -164,6 +164,7 @@ public class CatalogFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<Collection<Book>> call, Throwable throwable) {
+                        Log.e(this.getClass().getSimpleName(), throwable.toString());
                     }
                 });
     }
@@ -180,7 +181,7 @@ public class CatalogFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<Collection<Book>> call, Throwable throwable) {
-
+                        Log.e(this.getClass().getSimpleName(), throwable.toString());
                     }
                 });
     }

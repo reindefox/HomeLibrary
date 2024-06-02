@@ -26,12 +26,6 @@
             android:layout_height="wrap_content"
             android:src="@drawable/login" />
 
-        <Button
-            android:id="@+id/testAccountButton"
-            style="@style/Base.Theme.HomeLibrary.DefaultButton"
-            android:layout_width="match_parent"
-            android:text="@string/login_test_account" />
-
         <View
             android:id="@+id/divider"
             android:layout_width="match_parent"
@@ -68,7 +62,8 @@
                 android:drawableStart="@drawable/lock_fill0_wght400_grad0_opsz24"
                 android:drawableTint="#AAAAAA"
                 android:hint="@string/login_password"
-                android:inputType="text|textPassword" />
+                android:inputType="text|textPassword"
+                android:imeOptions="actionDone"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <View

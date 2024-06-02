@@ -9,11 +9,6 @@ public class AuthorizationUtils {
     public static final String PREFS_AUTO_LOGIN = "keep_login";
 
     /**
-     * Максимальная длина имени пользователя и пароля
-     */
-    public static final int MAX_USER_DATA_LENGTH = 32;
-
-    /**
      * Применение алгоритма для шифрования пароля
      * @param password исходный пароль
      * @return зашифрованный пароль

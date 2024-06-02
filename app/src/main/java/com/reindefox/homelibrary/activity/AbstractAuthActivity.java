@@ -20,6 +20,21 @@ public abstract class AbstractAuthActivity extends AppCompatActivity {
 
     public static final String ARG_USER_ROLE = "role";
 
+    /**
+     * Разрешены только строчные, заглавные буквы, цифры и . _
+     */
+    public static final String ALLOWED_LOGIN_CHARS = "^[a-zA-Z0-9._]+$";
+
+    /**
+     * Разрешены только строчные, заглавные буквы, цифры и . _
+     */
+    public static final String ALLOWED_PWD_CHARS = "^[a-zA-Z0-9._]+$";
+
+    /**
+     * Максимальная длина имени пользователя и пароля
+     */
+    public static final int MAX_USER_DATA_LENGTH = 32;
+
     protected AuthorizationService authorizationService;
 
     @Override
